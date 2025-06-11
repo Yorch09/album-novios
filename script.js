@@ -1,13 +1,38 @@
-const fotos = [
-  { src: "img/primer_viaje.jpg", desbloqueada: true },
-  { src: "img/cena_romantica.jpg", desbloqueada: false },
-  { src: "img/cumple.jpg", desbloqueada: false },
-];
+const cloudName = 'TU_CLOUD_NAME'; // Sustituye con tu cloud name
+const uploadPreset = 'album_unsigned'; // Usa el nombre que diste al preset
 
-const gallery = document.getElementById("gallery");
+function subirImagen() {
+  const fileInput = document.getElementById('fileInput');
+  const file = fileInput.files[0];
 
-fotos.forEach(foto => {
-  const img = document.createElement("img");
-  img.src = foto.desbloqueada ? foto.src : "https://via.placeholder.com/200x200.png?text=🔒+Bloqueada";
-  gallery.appendChild(img);
-});
+  if (!file) {
+    alert('Por favor selecciona una imagen');
+    return;
+  }
+
+  const url = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', uploadPreset);
+
+  fetch(url, {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log('Imagen subida:', data.secure_url);
+
+    const img = document.createElement('img');
+    img.src = data.secure_url;
+    img.alt = 'Foto subida';
+    img.width = 300;
+
+    document.getElementById('imagenes').appendChild(img);
+  })
+  .catch(err => {
+    console.error('Error al subir imagen:', err);
+    alert('Hubo un problema al subir la imagen');
+  });
+}
