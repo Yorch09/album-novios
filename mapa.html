@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mapa de Provincias</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Álbum por Provincias</h1>
+  <p>Haz clic en una provincia para ver o subir una foto</p>
+
+  <div id="mapa-container">
+    <!-- Aquí va el SVG del mapa -->
+    <object type="image/svg+xml" data="espana.svg" id="mapa"></object>
+  </div>
+
+  <div id="imagen-container" style="display: none;">
+    <h2 id="provincia-title"></h2>
+    <input type="file" id="input-imagen" />
+    <button onclick="subirImagenProvincia()">Subir Foto</button>
+    <div id="foto-provincia"></div>
+  </div>
+
+  <script src="mapa.js"></script>
+</body>
+</html>
