@@ -2,17 +2,40 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Mapa de Provincias</title>
+  <title>Álbum por Provincias</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .provincia {
+      fill: #f0f0f0;
+      stroke: #999;
+      cursor: pointer;
+      transition: fill 0.3s;
+    }
+
+    .provincia:hover {
+      fill: #ffcccb;
+    }
+
+    .activa {
+      fill: #ff8c66 !important;
+    }
+  </style>
 </head>
 <body>
   <h1>Álbum por Provincias</h1>
   <p>Haz clic en una provincia para ver o subir una foto</p>
 
-  <div id="mapa-container">
-    <!-- Aquí va el SVG del mapa -->
-    <object type="image/svg+xml" data="espana.svg" id="mapa"></object>
-  </div>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+    <!-- Provincias simplificadas como rectángulos por ahora -->
+    <rect id="madrid" class="provincia" x="200" y="200" width="100" height="100" />
+    <rect id="valencia" class="provincia" x="350" y="250" width="100" height="100" />
+    <rect id="sevilla" class="provincia" x="100" y="350" width="100" height="100" />
+  </svg>
 
   <div id="imagen-container" style="display: none;">
     <h2 id="provincia-title"></h2>
@@ -21,6 +44,33 @@
     <div id="foto-provincia"></div>
   </div>
 
-  <script src="mapa.js"></script>
+  <script>
+    const provincias = document.querySelectorAll('.provincia');
+    const titulo = document.getElementById('provincia-title');
+    const contenedor = document.getElementById('imagen-container');
+
+    provincias.forEach(prov => {
+      prov.addEventListener('click', () => {
+        provincias.forEach(p => p.classList.remove('activa'));
+        prov.classList.add('activa');
+        const nombre = prov.id.charAt(0).toUpperCase() + prov.id.slice(1);
+        titulo.innerText = `Provincia: ${nombre}`;
+        contenedor.style.display = 'block';
+      });
+    });
+
+    function subirImagenProvincia() {
+      const input = document.getElementById('input-imagen');
+      const archivo = input.files[0];
+      if (!archivo) return alert("Selecciona una imagen primero.");
+
+      const lector = new FileReader();
+      lector.onload = function () {
+        const cont = document.getElementById('foto-provincia');
+        cont.innerHTML = `<img src="${lector.result}" style="max-width: 300px;" />`;
+      };
+      lector.readAsDataURL(archivo);
+    }
+  </script>
 </body>
 </html>
