@@ -30,6 +30,7 @@
   <svg id="mapa" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
     <defs id="defs"></defs>
 
+    <!-- Rectángulos de provincias con relleno por defecto -->
     <rect id="madrid" class="provincia" x="200" y="200" width="100" height="100" fill="#eee" />
     <rect id="valencia" class="provincia" x="350" y="250" width="100" height="100" fill="#eee" />
     <rect id="sevilla" class="provincia" x="100" y="350" width="100" height="100" fill="#eee" />
@@ -71,25 +72,33 @@
         const idProvincia = provinciaSeleccionada.id;
         const urlImagen = lector.result;
 
-        // Crear o actualizar el patrón
-        const patternId = `pattern-${idProvincia}`;
+        const x = provinciaSeleccionada.getAttribute('x');
+        const y = provinciaSeleccionada.getAttribute('y');
+        const width = provinciaSeleccionada.getAttribute('width');
+        const height = provinciaSeleccionada.getAttribute('height');
+
         const defs = document.getElementById('defs');
+        const patternId = `pattern-${idProvincia}`;
         let pattern = document.getElementById(patternId);
 
         if (pattern) {
-          // Si ya existe, solo actualizamos la imagen
-          pattern.querySelector('image').setAttribute('xlink:href', urlImagen);
+          // Si ya existe, actualiza la imagen
+          pattern.querySelector('image').setAttributeNS('http://www.w3.org/1999/xlink', 'href', urlImagen);
         } else {
-          // Crear nuevo patrón
+          // Crear nuevo patrón con coordenadas absolutas
           pattern = document.createElementNS('http://www.w3.org/2000/svg', 'pattern');
           pattern.setAttribute('id', patternId);
-          pattern.setAttribute('patternUnits', 'objectBoundingBox');
-          pattern.setAttribute('width', '1');
-          pattern.setAttribute('height', '1');
+          pattern.setAttribute('patternUnits', 'userSpaceOnUse');
+          pattern.setAttribute('x', x);
+          pattern.setAttribute('y', y);
+          pattern.setAttribute('width', width);
+          pattern.setAttribute('height', height);
 
           const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-          image.setAttributeNS(null, 'width', '100');
-          image.setAttributeNS(null, 'height', '100');
+          image.setAttributeNS(null, 'x', x);
+          image.setAttributeNS(null, 'y', y);
+          image.setAttributeNS(null, 'width', width);
+          image.setAttributeNS(null, 'height', height);
           image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', urlImagen);
 
           pattern.appendChild(image);
