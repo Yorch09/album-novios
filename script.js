@@ -294,3 +294,27 @@ var simplemaps_countrymap_mapdata={
   },
   regions: {}
 };
+for (const codigo in simplemaps_countrymap_mapdata.state_specific) {
+  const estado = simplemaps_countrymap_mapdata.state_specific[codigo];
+
+  if (provinciasConFoto[codigo]) {
+    // Tiene foto: no cambia de color al pasar
+    estado.color = "#88A4BC";
+    estado.hover_color = "#88A4BC"; // sin cambio de color
+    estado.description = `<img src="${provinciasConFoto[codigo]}" style="max-width:150px;">`;
+  } else {
+    // No tiene foto: sí cambia al pasar el ratón
+    estado.color = "#88A4BC";
+    estado.hover_color = "#3B729F";
+    estado.description = ""; // o algo como "Haz clic para subir foto"
+  }
+}
+simplemaps_countrymap.hooks.state_click = function(codigo) {
+  if (!provinciasConFoto[codigo]) {
+    alert(`Has hecho clic en ${simplemaps_countrymap_mapdata.state_specific[codigo].name}`);
+    // Aquí puedes abrir tu formulario de subida, por ejemplo
+  }
+};
+simplemaps_countrymap.load();
+
+
