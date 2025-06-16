@@ -36,59 +36,80 @@
   </div>
 
   <script>
-    const provincias = document.querySelectorAll('.provincia');
-    const titulo = document.getElementById('provincia-title');
-    const contenedor = document.getElementById('imagen-container');
     let provinciaSeleccionada = null;
+    let svgDoc = null;
 
-    provincias.forEach(prov => {
-      prov.addEventListener('click', () => {
-        provincias.forEach(p => p.classList.remove('activa'));
-        prov.classList.add('activa');
-        provinciaSeleccionada = prov;
-        const nombre = prov.id.charAt(0).toUpperCase() + prov.id.slice(1);
-        titulo.innerText = `Provincia: ${nombre}`;
-        contenedor.style.display = 'block';
+    document.getElementById('mapa').addEventListener('load', function () {
+      svgDoc = this.contentDocument;
+      const provincias = svgDoc.querySelectorAll('.provincia');
+
+      provincias.forEach(prov => {
+        prov.style.cursor = 'pointer';
+        prov.addEventListener('click', () => {
+          provincias.forEach(p => p.classList.remove('activa'));
+          prov.classList.add('activa');
+          provinciaSeleccionada = prov;
+          const nombre = prov.id.charAt(0).toUpperCase() + prov.id.slice(1);
+          document.getElementById('provincia-title').innerText = `Provincia: ${nombre}`;
+          document.getElementById('imagen-container').style.display = 'block';
+        });
+
+        // Cambio de color al pasar el ratón
+        prov.addEventListener('mouseover', () => {
+          prov.style.fill = '#3B729F';
+        });
+        prov.addEventListener('mouseout', () => {
+          prov.style.fill = '';
+        });
       });
     });
 
     function subirImagenProvincia() {
-  const input = document.getElementById('input-imagen');
-  const archivo = input.files[0];
-  if (!archivo || !provinciaSeleccionada) return alert("Selecciona una imagen y provincia.");
-  const lector = new FileReader();
-  lector.onload = () => {
-    const { el, svg, defs } = provinciaSeleccionada;
-    const bb = el.getBBox();
-    const { x, y, width, height } = bb;
-    const patternId = `pattern-${el.id}`;
-    let pattern = svg.getElementById(patternId);
-    if (pattern) {
-      pattern.querySelector('image').setAttributeNS('http://www.w3.org/1999/xlink','href', lector.result);
-    } else {
-      pattern = document.createElementNS('http://www.w3.org/2000/svg','pattern');
-      pattern.setAttribute('id', patternId);
-      pattern.setAttribute('patternUnits', 'userSpaceOnUse');
-      pattern.setAttribute('x', x);
-      pattern.setAttribute('y', y);
-      pattern.setAttribute('width', width);
-      pattern.setAttribute('height', height);
+      const input = document.getElementById('input-imagen');
+      const archivo = input.files[0];
+      if (!archivo || !provinciaSeleccionada) return alert("Selecciona una imagen y una provincia.");
 
-      const image = document.createElementNS('http://www.w3.org/2000/svg','image');
-      image.setAttribute('x', x);
-      image.setAttribute('y', y);
-      image.setAttribute('width', width);
-      image.setAttribute('height', height);
-      image.setAttributeNS('http://www.w3.org/1999/xlink','href', lector.result);
+      const lector = new FileReader();
+      lector.onload = () => {
+        const svgRoot = svgDoc.documentElement;
+        let defs = svgDoc.querySelector('defs');
 
-      pattern.appendChild(image);
-      defs.appendChild(pattern);
+        if (!defs) {
+          defs = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'defs');
+          svgRoot.insertBefore(defs, svgRoot.firstChild);
+        }
+
+        const bb = provinciaSeleccionada.getBBox();
+        const patternId = `pattern-${provinciaSeleccionada.id}`;
+        let pattern = svgDoc.getElementById(patternId);
+
+        if (pattern) {
+          pattern.querySelector('image').setAttributeNS('http://www.w3.org/1999/xlink', 'href', lector.result);
+        } else {
+          pattern = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'pattern');
+          pattern.setAttribute('id', patternId);
+          pattern.setAttribute('patternUnits', 'userSpaceOnUse');
+          pattern.setAttribute('x', bb.x);
+          pattern.setAttribute('y', bb.y);
+          pattern.setAttribute('width', bb.width);
+          pattern.setAttribute('height', bb.height);
+
+          const image = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'image');
+          image.setAttribute('x', bb.x);
+          image.setAttribute('y', bb.y);
+          image.setAttribute('width', bb.width);
+          image.setAttribute('height', bb.height);
+          image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', lector.result);
+
+          pattern.appendChild(image);
+          defs.appendChild(pattern);
+        }
+
+        provinciaSeleccionada.setAttribute('fill', `url(#${patternId})`);
+      };
+
+      lector.readAsDataURL(archivo);
     }
-    el.setAttribute('fill', `url(#${patternId})`);
-  };
-  lector.readAsDataURL(archivo);
-}
-
   </script>
 </body>
 </html>
