@@ -53,57 +53,42 @@
     });
 
     function subirImagenProvincia() {
-      const input = document.getElementById('input-imagen');
-      const archivo = input.files[0];
-      if (!archivo || !provinciaSeleccionada) {
-        alert("Selecciona una imagen y una provincia.");
-        return;
-      }
+  const input = document.getElementById('input-imagen');
+  const archivo = input.files[0];
+  if (!archivo || !provinciaSeleccionada) return alert("Selecciona una imagen y provincia.");
+  const lector = new FileReader();
+  lector.onload = () => {
+    const { el, svg, defs } = provinciaSeleccionada;
+    const bb = el.getBBox();
+    const { x, y, width, height } = bb;
+    const patternId = `pattern-${el.id}`;
+    let pattern = svg.getElementById(patternId);
+    if (pattern) {
+      pattern.querySelector('image').setAttributeNS('http://www.w3.org/1999/xlink','href', lector.result);
+    } else {
+      pattern = document.createElementNS('http://www.w3.org/2000/svg','pattern');
+      pattern.setAttribute('id', patternId);
+      pattern.setAttribute('patternUnits', 'userSpaceOnUse');
+      pattern.setAttribute('x', x);
+      pattern.setAttribute('y', y);
+      pattern.setAttribute('width', width);
+      pattern.setAttribute('height', height);
 
-      const lector = new FileReader();
-      lector.onload = function () {
-        const idProvincia = provinciaSeleccionada.id;
-        const urlImagen = lector.result;
+      const image = document.createElementNS('http://www.w3.org/2000/svg','image');
+      image.setAttribute('x', x);
+      image.setAttribute('y', y);
+      image.setAttribute('width', width);
+      image.setAttribute('height', height);
+      image.setAttributeNS('http://www.w3.org/1999/xlink','href', lector.result);
 
-        const x = provinciaSeleccionada.getAttribute('x');
-        const y = provinciaSeleccionada.getAttribute('y');
-        const width = provinciaSeleccionada.getAttribute('width');
-        const height = provinciaSeleccionada.getAttribute('height');
-
-        const defs = document.getElementById('defs');
-        const patternId = `pattern-${idProvincia}`;
-        let pattern = document.getElementById(patternId);
-
-        if (pattern) {
-          // Si ya existe, actualiza la imagen
-          pattern.querySelector('image').setAttributeNS('http://www.w3.org/1999/xlink', 'href', urlImagen);
-        } else {
-          // Crear nuevo patrón con coordenadas absolutas
-          pattern = document.createElementNS('http://www.w3.org/2000/svg', 'pattern');
-          pattern.setAttribute('id', patternId);
-          pattern.setAttribute('patternUnits', 'userSpaceOnUse');
-          pattern.setAttribute('x', x);
-          pattern.setAttribute('y', y);
-          pattern.setAttribute('width', width);
-          pattern.setAttribute('height', height);
-
-          const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-          image.setAttributeNS(null, 'x', x);
-          image.setAttributeNS(null, 'y', y);
-          image.setAttributeNS(null, 'width', width);
-          image.setAttributeNS(null, 'height', height);
-          image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', urlImagen);
-
-          pattern.appendChild(image);
-          defs.appendChild(pattern);
-        }
-
-        // Aplicar el patrón a la provincia
-        provinciaSeleccionada.setAttribute('fill', `url(#${patternId})`);
-      };
-
-      lector.readAsDataURL(archivo);
+      pattern.appendChild(image);
+      defs.appendChild(pattern);
     }
+    el.setAttribute('fill', `url(#${patternId})`);
+  };
+  lector.readAsDataURL(archivo);
+}
+
   </script>
 </body>
 </html>
