@@ -1,62 +1,121 @@
-const cloudName = 'TU_CLOUD_NAME'; // Sustituye con tu cloud name
-const uploadPreset = 'album_unsigned'; // Usa el nombre que diste al preset
-const obj = document.getElementById('mapa');
-obj.addEventListener('load', () => {
-  const svg = obj.contentDocument;
-  const provincias = svg.querySelectorAll('[id^="ES-"]'); // IDs tipo ES-M, ES-BA, etc.
-  const defs = svg.querySelector('defs') || svg.createElementNS('http://www.w3.org/2000/svg','defs');
-  if (!svg.querySelector('defs')) svg.documentElement.prepend(defs);
+var simplemaps_countrymap_mapdata = {
+  main_settings: {
+    width: "responsive",
+    background_color: "#FFFFFF",
+    background_transparent: "yes",
+    border_color: "#ffffff",
 
-  provincias.forEach(prov => {
-    prov.classList.add('provincia');
-    prov.addEventListener('click', () => selectProvincia(prov, svg, defs));
-  });
-});
+    state_description: "",
+    state_color: "#88A4BC",
+    state_hover_color: "#3B729F",
+    state_url: "",
+    border_size: 1.5,
+    all_states_inactive: "no",
+    all_states_zoomable: "yes",
 
-let provinciaSeleccionada = null;
+    location_description: "Location description",
+    location_url: "",
+    location_color: "#FF0067",
+    location_opacity: 0.8,
+    location_hover_opacity: 1,
+    location_size: 25,
+    location_type: "square",
+    location_image_source: "frog.png",
+    location_border_color: "#FFFFFF",
+    location_border: 2,
+    location_hover_border: 2.5,
+    all_locations_inactive: "no",
+    all_locations_hidden: "no",
 
-function selectProvincia(prov, svg, defs) {
-  svg.querySelectorAll('.activa').forEach(el => el.classList.remove('activa'));
-  prov.classList.add('activa');
-  provinciaSeleccionada = { el: prov, svg, defs };
-  document.getElementById('imagen-container').style.display = 'block';
-  document.getElementById('provincia-title').innerText =
-    prov.getAttribute('id').replace('ES-','');
-}
+    label_color: "#ffffff",
+    label_hover_color: "#ffffff",
+    label_size: 16,
+    label_font: "Arial",
+    label_display: "auto",
+    label_scale: "yes",
+    hide_labels: "no",
+    hide_eastern_labels: "no",
 
+    zoom: "yes",
+    manual_zoom: "yes",
+    back_image: "no",
+    initial_back: "no",
+    initial_zoom: "-1",
+    initial_zoom_solo: "no",
+    region_opacity: 1,
+    region_hover_opacity: 0.6,
+    zoom_out_incrementally: "yes",
+    zoom_percentage: 0.99,
+    zoom_time: 0.5,
 
-function subirImagen() {
-  const fileInput = document.getElementById('fileInput');
-  const file = fileInput.files[0];
+    popup_color: "white",
+    popup_opacity: 0.9,
+    popup_shadow: 1,
+    popup_corners: 5,
+    popup_font: "12px/1.5 Verdana, Arial, Helvetica, sans-serif",
+    popup_nocss: "no",
 
-  if (!file) {
-    alert('Por favor selecciona una imagen');
-    return;
-  }
+    div: "map",
+    auto_load: "yes",
+    url_new_tab: "no",
+    images_directory: "default",
+    fade_time: 0.1,
+    link_text: "View Website",
+    popups: "detect"
+  },
 
-  const url = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
+  state_specific: {
+    ESAN: { name: "Andalucía" },
+    ESAR: { name: "Aragon" },
+    ESAS: { name: "Asturias" },
+    ESCB: { name: "Cantabria" },
+    ESCE: { name: "Ceuta" },
+    ESCL: { name: "Castilla y León" },
+    ESCM: { name: "Castilla la Mancha" },
+    ESCN: { name: "Islas Canarias" },
+    ESCT: { name: "Cataluña" },
+    ESEX: { name: "Extremadura" },
+    ESGA: { name: "Galicia" },
+    ESIB: { name: "Islas Baleares" },
+    ESMC: { name: "Murcia" },
+    ESMD: { name: "Comunidad de Madrid" },
+    ESML: { name: "Melilla" },
+    ESNC: { name: "Navarra, Comunidad Foral de" },
+    ESPV: { name: "País Vasco" },
+    ESRI: { name: "La Rioja" },
+    ESVC: { name: "Comunidad Valenciana" }
+  },
 
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('upload_preset', uploadPreset);
+  locations: {
+    "0": {
+      name: "Madrid",
+      lat: "40.412752",
+      lng: "-3.707721"
+    }
+  },
 
-  fetch(url, {
-    method: 'POST',
-    body: formData
-  })
-  .then(res => res.json())
-  .then(data => {
-    console.log('Imagen subida:', data.secure_url);
+  labels: {
+    ESAN: { name: "Andalucía", parent_id: "ESAN" },
+    ESAR: { name: "Aragon", parent_id: "ESAR" },
+    ESAS: { name: "Asturias", parent_id: "ESAS" },
+    ESCB: { name: "Cantabria", parent_id: "ESCB" },
+    ESCE: { name: "Ceuta", parent_id: "ESCE" },
+    ESCL: { name: "Castilla y León", parent_id: "ESCL" },
+    ESCM: { name: "Castilla la Mancha", parent_id: "ESCM" },
+    ESCN: { name: "Islas Canarias", parent_id: "ESCN" },
+    ESCT: { name: "Cataluña", parent_id: "ESCT" },
+    ESEX: { name: "Extremadura", parent_id: "ESEX" },
+    ESGA: { name: "Galicia", parent_id: "ESGA" },
+    ESIB: { name: "Islas Baleares", parent_id: "ESIB" },
+    ESMC: { name: "Murcia", parent_id: "ESMC" },
+    ESMD: { name: "Comunidad de Madrid", parent_id: "ESMD" },
+    ESML: { name: "Melilla", parent_id: "ESML" },
+    ESNC: { name: "Navarra, Comunidad Foral de", parent_id: "ESNC" },
+    ESPV: { name: "País Vasco", parent_id: "ESPV" },
+    ESRI: { name: "La Rioja", parent_id: "ESRI" },
+    ESVC: { name: "Comunidad Valenciana", parent_id: "ESVC" }
+  },
 
-    const img = document.createElement('img');
-    img.src = data.secure_url;
-    img.alt = 'Foto subida';
-    img.width = 300;
-
-    document.getElementById('imagenes').appendChild(img);
-  })
-  .catch(err => {
-    console.error('Error al subir imagen:', err);
-    alert('Hubo un problema al subir la imagen');
-  });
-}
+  legend: { entries: [] },
+  regions: {}
+};
