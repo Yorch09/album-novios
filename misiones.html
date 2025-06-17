@@ -2,22 +2,31 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Álbum por Misiones - Cartas</title>
+  <title>Álbum por Misiones 💌</title>
   <style>
     body {
       font-family: sans-serif;
-      background: #f0f0f0;
+      background: #fefaf5;
       padding: 20px;
     }
 
     h1 {
       text-align: center;
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+
+    #pagina-tema {
+      text-align: center;
+      font-size: 1.2em;
+      margin-bottom: 10px;
+      font-weight: bold;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 15px;
       max-width: 1000px;
       margin: auto;
     }
@@ -29,7 +38,7 @@
     .card-inner {
       position: relative;
       width: 100%;
-      padding-top: 140%;
+      padding-top: 140%; /* relación 7:5 */
       transform-style: preserve-3d;
       transition: transform 0.6s;
     }
@@ -45,38 +54,24 @@
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
       display: flex;
-      flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       padding: 10px;
       box-sizing: border-box;
     }
 
     .card-front {
-      background: linear-gradient(135deg, #fce4ec, #f8bbd0);
-      color: #880e4f;
-      font-family: 'Segoe UI', sans-serif;
-      font-size: 1rem;
-      position: relative;
-    }
-
-    .card-front::before {
-      content: "❤️";
-      font-size: 3rem;
-      position: absolute;
-      top: 15px;
-    }
-
-    .card-front .titulo-mision {
-      margin-top: 40px;
-      text-align: center;
+      background: url('https://i.imgur.com/yUey6wT.png') center/contain no-repeat, #ffecf0;
+      flex-direction: column;
       font-weight: bold;
-      z-index: 1;
+      font-size: 0.9em;
+      text-align: center;
     }
 
     .card-back {
       background: white;
       transform: rotateY(180deg);
+      flex-direction: column;
       text-align: center;
     }
 
@@ -103,33 +98,112 @@
       margin-top: 10px;
       padding: 5px 10px;
       border: none;
-      background: #007bff;
+      background: #ff4081;
       color: white;
       border-radius: 5px;
       cursor: pointer;
     }
 
     button:hover {
+      background: #d81b60;
+    }
+
+    .navegacion {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .navegacion button {
+      margin: 0 10px;
+      padding: 8px 15px;
+      background: #007bff;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .navegacion button:hover {
       background: #0056b3;
     }
   </style>
 </head>
 <body>
 
-<h1>Álbum por Misiones 💌</h1>
+<h1>Álbum de Misiones 💌</h1>
+<div id="pagina-tema"></div>
 <div class="grid" id="grid-misiones"></div>
 
+<div class="navegacion">
+  <button onclick="cambiarPagina(-1)">⬅️ Anterior</button>
+  <span id="pagina-actual"></span>
+  <button onclick="cambiarPagina(1)">Siguiente ➡️</button>
+</div>
+
 <script>
-  const misiones = [
-    { nombre: "Primera cita", estado: "desbloqueada", imagen: null },
-    { nombre: "Atardecer juntos", estado: "bloqueada", imagen: null },
-    { nombre: "Viaje sorpresa", estado: "bloqueada", imagen: null }
+  const album = [
+    {
+      tema: "Comienzos 💞",
+      misiones: Array.from({ length: 15 }, (_, i) => ({
+        nombre: `Comienzo ${i + 1}`,
+        estado: i === 0 ? "desbloqueada" : "bloqueada",
+        imagen: null
+      }))
+    },
+    {
+      tema: "Aventuras 🌍",
+      misiones: Array.from({ length: 15 }, (_, i) => ({
+        nombre: `Aventura ${i + 1}`,
+        estado: "bloqueada",
+        imagen: null
+      }))
+    },
+    {
+      tema: "Detalles ✨",
+      misiones: Array.from({ length: 15 }, (_, i) => ({
+        nombre: `Detalle ${i + 1}`,
+        estado: "bloqueada",
+        imagen: null
+      }))
+    },
+    {
+      tema: "Celebraciones 🎉",
+      misiones: Array.from({ length: 15 }, (_, i) => ({
+        nombre: `Fiesta ${i + 1}`,
+        estado: "bloqueada",
+        imagen: null
+      }))
+    },
+    {
+      tema: "Nuestros Momentos 💖",
+      misiones: Array.from({ length: 15 }, (_, i) => ({
+        nombre: `Momento ${i + 1}`,
+        estado: "bloqueada",
+        imagen: null
+      }))
+    }
   ];
 
-  const grid = document.getElementById('grid-misiones');
+  let paginaActual = 0;
 
-  function renderizar() {
+  function renderizarAlbum() {
+    const seccion = album[paginaActual];
+    document.getElementById('pagina-tema').textContent = `Tema: ${seccion.tema}`;
+    document.getElementById('pagina-actual').textContent = `Página ${paginaActual + 1} / ${album.length}`;
+    renderizarMisiones(seccion.misiones);
+  }
+
+  function cambiarPagina(delta) {
+    if (paginaActual + delta >= 0 && paginaActual + delta < album.length) {
+      paginaActual += delta;
+      renderizarAlbum();
+    }
+  }
+
+  function renderizarMisiones(misiones) {
+    const grid = document.getElementById('grid-misiones');
     grid.innerHTML = '';
+
     misiones.forEach((mision, index) => {
       const card = document.createElement('div');
       card.className = 'card';
@@ -139,15 +213,10 @@
       const inner = document.createElement('div');
       inner.className = 'card-inner';
 
-      // Parte delantera (reverso de carta personalizado)
       const front = document.createElement('div');
       front.className = 'card-front';
-      const tituloMision = document.createElement('div');
-      tituloMision.className = 'titulo-mision';
-      tituloMision.textContent = mision.nombre;
-      front.appendChild(tituloMision);
+      front.innerHTML = `<div>${mision.nombre}</div>`;
 
-      // Parte trasera (interior de misión)
       const back = document.createElement('div');
       back.className = 'card-back';
 
@@ -174,10 +243,11 @@
           reader.onload = () => {
             mision.imagen = reader.result;
             mision.estado = 'completada';
+
             if (index + 1 < misiones.length && misiones[index + 1].estado === 'bloqueada') {
               misiones[index + 1].estado = 'desbloqueada';
             }
-            renderizar();
+            renderizarAlbum();
           };
           reader.readAsDataURL(file);
         };
@@ -200,7 +270,7 @@
     });
   }
 
-  renderizar();
+  renderizarAlbum();
 </script>
 
 </body>
