@@ -165,7 +165,7 @@
       tema: "Aventuras 🌍",
       misiones: Array.from({ length: 15 }, (_, i) => ({
         nombre: `Aventura ${i + 1}`,
-        estado: "bloqueada",
+        estado: i === 0 ? "desbloqueada" : "bloqueada",
         imagen: null,
         descripcion: `Sube una foto de una aventura que hayamos vivido, día ${i + 1}.`
       }))
@@ -183,7 +183,7 @@
       tema: "Celebraciones 🎉",
       misiones: Array.from({ length: 15 }, (_, i) => ({
         nombre: `Fiesta ${i + 1}`,
-        estado: "bloqueada",
+        estado: i === 0 ? "desbloqueada" : "bloqueada",
         imagen: null,
         descripcion: `Una celebración o evento especial número ${i + 1}.`
       }))
