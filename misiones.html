@@ -29,7 +29,7 @@
     .card-inner {
       position: relative;
       width: 100%;
-      padding-top: 140%; /* Relación 7:5 */
+      padding-top: 140%;
       transform-style: preserve-3d;
       transition: transform 0.6s;
     }
@@ -44,17 +44,39 @@
       backface-visibility: hidden;
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      box-sizing: border-box;
     }
 
     .card-front {
-      background: url('https://i.imgur.com/4m2V3rZ.png') center/cover no-repeat; /* Imagen reverso */
+      background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+      color: #880e4f;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 1rem;
+      position: relative;
+    }
+
+    .card-front::before {
+      content: "❤️";
+      font-size: 3rem;
+      position: absolute;
+      top: 15px;
+    }
+
+    .card-front .titulo-mision {
+      margin-top: 40px;
+      text-align: center;
+      font-weight: bold;
+      z-index: 1;
     }
 
     .card-back {
       background: white;
       transform: rotateY(180deg);
-      padding: 10px;
-      box-sizing: border-box;
       text-align: center;
     }
 
@@ -117,10 +139,13 @@
       const inner = document.createElement('div');
       inner.className = 'card-inner';
 
-      // Parte delantera (reverso de carta)
+      // Parte delantera (reverso de carta personalizado)
       const front = document.createElement('div');
       front.className = 'card-front';
-      front.title = mision.nombre;
+      const tituloMision = document.createElement('div');
+      tituloMision.className = 'titulo-mision';
+      tituloMision.textContent = mision.nombre;
+      front.appendChild(tituloMision);
 
       // Parte trasera (interior de misión)
       const back = document.createElement('div');
@@ -166,7 +191,6 @@
       card.appendChild(inner);
       grid.appendChild(card);
 
-      // Click para girar solo si está desbloqueada o completada
       if (mision.estado !== 'bloqueada') {
         card.addEventListener('click', (e) => {
           if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
