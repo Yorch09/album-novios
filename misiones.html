@@ -174,7 +174,7 @@
       tema: "Detalles ✨",
       misiones: Array.from({ length: 15 }, (_, i) => ({
         nombre: `Detalle ${i + 1}`,
-        estado: "bloqueada",
+        estado: i === 0 ? "desbloqueada" : "bloqueada",
         imagen: null,
         descripcion: `Un pequeño detalle que signifique mucho, momento ${i + 1}.`
       }))
@@ -192,7 +192,7 @@
       tema: "Nuestros Momentos 💖",
       misiones: Array.from({ length: 15 }, (_, i) => ({
         nombre: `Momento ${i + 1}`,
-        estado: "bloqueada",
+        estado: i === 0 ? "desbloqueada" : "bloqueada",
         imagen: null,
         descripcion: `Un momento inolvidable que compartimos. #${i + 1}`
       }))
