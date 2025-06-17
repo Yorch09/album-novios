@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Álbum por Misiones</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+
+    .mision {
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      background: white;
+    }
+
+    .mision.bloqueada {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .mision img {
+      max-width: 100%;
+      margin-top: 10px;
+    }
+
+    .mision h3 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Misiones del Amor ❤️</h1>
+
+  <div id="lista-misiones"></div>
+
+  <script>
+    const misiones = [
+      { nombre: "Primera cita", estado: "desbloqueada", imagen: null },
+      { nombre: "Paseo por el parque", estado: "bloqueada", imagen: null },
+      { nombre: "Viaje juntos", estado: "bloqueada", imagen: null }
+    ];
+
+    function renderizarMisiones() {
+      const contenedor = document.getElementById('lista-misiones');
+      contenedor.innerHTML = '';
+
+      misiones.forEach((mision, index) => {
+        const div = document.createElement('div');
+        div.className = `mision ${mision.estado}`;
+
+        const titulo = document.createElement('h3');
+        titulo.textContent = mision.nombre;
+
+        const estado = document.createElement('p');
+        estado.textContent = `Estado: ${mision.estado}`;
+
+        div.appendChild(titulo);
+        div.appendChild(estado);
+
+        if (mision.estado === 'desbloqueada') {
+          const input = document.createElement('input');
+          input.type = 'file';
+          input.accept = 'image/*';
+
+          const subir = document.createElement('button');
+          subir.textContent = 'Subir foto';
+          subir.onclick = () => {
+            const archivo = input.files[0];
+            if (!archivo) return alert('Selecciona una imagen');
+
+            const lector = new FileReader();
+            lector.onload = () => {
+              mision.imagen = lector.result;
+              mision.estado = 'completada';
+              // Desbloquear la siguiente misión si existe
+              if (index + 1 < misiones.length) {
+                misiones[index + 1].estado = 'desbloqueada';
+              }
+              renderizarMisiones();
+            };
+            lector.readAsDataURL(archivo);
+          };
+
+          div.appendChild(input);
+          div.appendChild(subir);
+        }
+
+        if (mision.estado === 'completada' && mision.imagen) {
+          const img = document.createElement('img');
+          img.src = mision.imagen;
+          div.appendChild(img);
+        }
+
+        contenedor.appendChild(div);
+      });
+    }
+
+    renderizarMisiones();
+  </script>
+
+</body>
+</html>
