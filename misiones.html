@@ -156,34 +156,44 @@
 <script>
   const album = [
     {
-  tema: "Citas y momentos juntos 💖",
-  misiones: [
-    { nombre: "Selfie con cara tonta", descripcion: "Tomad una selfie haciendo una cara tonta juntos", estado: "desbloqueada", imagen: null },
-    { nombre: "Corazón con las manos", descripcion: "Sácate una foto haciendo un corazón con la persona que amas", estado: "bloqueada", imagen: null },
-    { nombre: "Brindis improvisado", descripcion: "Preparad un brindis con lo que tengáis – agua, zumo, lo que sea", estado: "bloqueada", imagen: null },
-    { nombre: "Cena romántica casera", descripcion: "Cocinad junt@s algo especial", estado: "bloqueada", imagen: null },
-    { nombre: "Juegos de mesa", descripcion: "Jugad a vuestro juego favorito o probad uno nuevo", estado: "bloqueada", imagen: null },
-    { nombre: "Helado juntos", descripcion: "Comed un helado juntos y disfrutad del sabor", estado: "bloqueada", imagen: null },
-    { nombre: "Cita en el cine", descripcion: "Disfrutad de una película romántica en el primer cine al que fuisteis", estado: "bloqueada", imagen: null },
-    { nombre: "Picnic", descripcion: "Manta en el suelo, comida sencilla y conversación", estado: "bloqueada", imagen: null },
-    { nombre: "Desayuno en pareja", descripcion: "Disfrutad de un desayuno con café mañanero", estado: "bloqueada", imagen: null },
-    { nombre: "Paseo de la mano", descripcion: "Id a caminar por un parque o zona especial", estado: "bloqueada", imagen: null },
-    { nombre: "Cine en casa", descripcion: "Elige peli, prepara snacks y disfrutad", estado: "bloqueada", imagen: null },
-    { nombre: "Bailar en el salón", descripcion: "Apagad las luces, encended una vela y bailad", estado: "bloqueada", imagen: null },
-    { nombre: "Spa casero", descripcion: "Masajes, mascarillas y mimo mutuo", estado: "bloqueada", imagen: null },
-    { nombre: "Mirar las estrellas", descripcion: "Salid y contemplad el cielo real", estado: "bloqueada", imagen: null },
-    { nombre: "Primera cita, hoy", descripcion: "Vestiros como en una primera cita", estado: "bloqueada", imagen: null }
-  ]
-}
-,
+      tema: "Citas y momentos juntos 💖",
+      misiones: [
+        { nombre: "Selfie con cara tonta", descripcion: "Tomad una selfie haciendo una cara tonta juntos", estado: "desbloqueada", imagen: null },
+        { nombre: "Corazón con las manos", descripcion: "Sácate una foto haciendo un corazón con la persona que amas", estado: "bloqueada", imagen: null },
+        { nombre: "Brindis improvisado", descripcion: "Preparad un brindis con lo que tengáis – agua, zumo, lo que sea", estado: "bloqueada", imagen: null },
+        { nombre: "Cena romántica casera", descripcion: "Cocinad junt@s algo especial", estado: "bloqueada", imagen: null },
+        { nombre: "Juegos de mesa", descripcion: "Jugad a vuestro juego favorito o probad uno nuevo", estado: "bloqueada", imagen: null },
+        { nombre: "Helado juntos", descripcion: "Comed un helado juntos y disfrutad del sabor", estado: "bloqueada", imagen: null },
+        { nombre: "Cita en el cine", descripcion: "Disfrutad de una película romántica en el primer cine al que fuisteis", estado: "bloqueada", imagen: null },
+        { nombre: "Picnic", descripcion: "Manta en el suelo, comida sencilla y conversación", estado: "bloqueada", imagen: null },
+        { nombre: "Desayuno en pareja", descripcion: "Disfrutad de un desayuno con café mañanero", estado: "bloqueada", imagen: null },
+        { nombre: "Paseo de la mano", descripcion: "Id a caminar por un parque o zona especial", estado: "bloqueada", imagen: null },
+        { nombre: "Cine en casa", descripcion: "Elige peli, prepara snacks y disfrutad", estado: "bloqueada", imagen: null },
+        { nombre: "Bailar en el salón", descripcion: "Apagad las luces, encended una vela y bailad", estado: "bloqueada", imagen: null },
+        { nombre: "Spa casero", descripcion: "Masajes, mascarillas y mimo mutuo", estado: "bloqueada", imagen: null },
+        { nombre: "Mirar las estrellas", descripcion: "Salid y contemplad el cielo real", estado: "bloqueada", imagen: null },
+        { nombre: "Primera cita, hoy", descripcion: "Vestiros como en una primera cita", estado: "bloqueada", imagen: null }
+      ]
+    },
     {
       tema: "Aventuras 🌍",
-      misiones: Array.from({ length: 15 }, (_, i) => ({
-        nombre: `Aventura ${i + 1}`,
-        estado: i === 0 ? "desbloqueada" : "bloqueada",
-        imagen: null,
-        descripcion: `Sube una foto de una aventura que hayamos vivido, día ${i + 1}.`
-      }))
+      misiones: [
+        { nombre: "Paseo por el campo", descripcion: "Salid a caminar por un entorno natural cercano, sin prisa, solo disfrutando", estado: "desbloqueada", imagen: null },
+        { nombre: "Visita la capital", descripcion: "Id juntos a la capital de vuestra provincia o comunidad y pasad el día allí", estado: "bloqueada", imagen: null },
+        { nombre: "Monumento favorito", descripcion: "Buscad el monumento que más os guste de vuestra ciudad y pasad un rato allí", estado: "bloqueada", imagen: null },
+        { nombre: "Tarde en una cafetería", descripcion: "Elegid una cafetería tranquila y hablad de cualquier cosa sin mirar el reloj", estado: "bloqueada", imagen: null },
+        { nombre: "Paseo por el centro", descripcion: "Caminad por las calles más bonitas del centro, como si fuerais turistas", estado: "bloqueada", imagen: null },
+        { nombre: "Tarde de librerías", descripcion: "Visitad una librería o biblioteca, elegid un libro para el otro", estado: "bloqueada", imagen: null },
+        { nombre: "Atardecer juntos", descripcion: "Buscad un lugar bonito para ver la puesta de sol abrazados", estado: "bloqueada", imagen: null },
+        { nombre: "Rincón secreto", descripcion: "Enseñadle al otro un lugar que os encante y que aún no conozca", estado: "bloqueada", imagen: null },
+        { nombre: "Día de mercado", descripcion: "Visitad un mercado local o mercadillo y elegid algo para compartir", estado: "bloqueada", imagen: null },
+        { nombre: "Escapada al barrio antiguo", descripcion: "Perdeos por las calles con más historia y encanto de vuestra ciudad", estado: "bloqueada", imagen: null },
+        { nombre: "Tomar algo en vuestro sitio de siempre", descripcion: "Id a ese bar, cafetería o rincón en el que soléis coincidir sin pensarlo mucho, y simplemente disfrutad del momento juntos.", estado: "bloqueada", imagen: null },
+        { nombre: "Cita en un parque", descripcion: "Pasad la tarde en un parque simplemente estando, sin hacer nada más", estado: "bloqueada", imagen: null },
+        { nombre: "Museo o exposición", descripcion: "Visitad un museo o muestra cultural, aunque no tengáis ni idea del tema", estado: "bloqueada", imagen: null },
+        { nombre: "Mirador o azotea", descripcion: "Subid a un lugar con vistas de la ciudad y quedaos allí un rato", estado: "bloqueada", imagen: null },
+        { nombre: "Caminar bajo la lluvia", descripcion: "Si un día llueve, salid a pasear juntos sin paraguas, solo por el momento", estado: "bloqueada", imagen: null }
+      ]
     },
     {
       tema: "Detalles ✨",
