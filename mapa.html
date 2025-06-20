@@ -92,34 +92,33 @@
           svgRoot.insertBefore(defs, svgRoot.firstChild);
         }
 
-        const bb = provinciaSeleccionada.getBBox();
         const patternId = `pattern-${provinciaSeleccionada.id}`;
-        let pattern = svgDoc.getElementById(patternId);
+        const bb = provinciaSeleccionada.getBBox();
 
-        if (pattern) {
-          const img = pattern.querySelector('image');
-          img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', lector.result);
-        } else {
-          pattern = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'pattern');
-          pattern.setAttribute('id', patternId);
-          pattern.setAttribute('patternUnits', 'userSpaceOnUse');
-          pattern.setAttribute('x', bb.x);
-          pattern.setAttribute('y', bb.y);
-          pattern.setAttribute('width', bb.width);
-          pattern.setAttribute('height', bb.height);
-
-          const image = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'image');
-          image.setAttribute('x', bb.x);
-          image.setAttribute('y', bb.y);
-          image.setAttribute('width', bb.width);
-          image.setAttribute('height', bb.height);
-          image.setAttribute('preserveAspectRatio', 'xMidYMid slice'); // ⬅️ Esta línea escala bien la imagen
-          image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', lector.result);
-
-          pattern.appendChild(image);
-          defs.appendChild(pattern);
+        // Elimina patrón anterior si existe
+        let oldPattern = svgDoc.getElementById(patternId);
+        if (oldPattern) {
+          oldPattern.remove();
         }
 
+        // Crear nuevo patrón
+        const pattern = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'pattern');
+        pattern.setAttribute('id', patternId);
+        pattern.setAttribute('patternUnits', 'objectBoundingBox');
+        pattern.setAttribute('width', 1);
+        pattern.setAttribute('height', 1);
+
+        const image = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'image');
+        image.setAttributeNS(null, 'width', 1);
+        image.setAttributeNS(null, 'height', 1);
+        image.setAttributeNS(null, 'preserveAspectRatio', 'xMidYMid slice');
+        image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', lector.result);
+        image.setAttributeNS(null, 'transform', 'scale(1)');
+
+        pattern.appendChild(image);
+        defs.appendChild(pattern);
+
+        // Aplicar patrón como fondo a la provincia
         provinciaSeleccionada.setAttribute('fill', `url(#${patternId})`);
       };
 
