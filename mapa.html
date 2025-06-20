@@ -96,34 +96,36 @@
         const bb = provinciaSeleccionada.getBBox();
 
         // Elimina patrón anterior si existe
-        let oldPattern = svgDoc.getElementById(patternId);
-        if (oldPattern) {
-          oldPattern.remove();
-        }
+        const oldPattern = svgDoc.getElementById(patternId);
+        if (oldPattern) oldPattern.remove();
 
-        // Crear nuevo patrón
+        // Crear nuevo patrón con userSpaceOnUse
         const pattern = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'pattern');
         pattern.setAttribute('id', patternId);
-        pattern.setAttribute('patternUnits', 'objectBoundingBox');
-        pattern.setAttribute('width', 1);
-        pattern.setAttribute('height', 1);
+        pattern.setAttribute('patternUnits', 'userSpaceOnUse');
+        pattern.setAttribute('x', bb.x);
+        pattern.setAttribute('y', bb.y);
+        pattern.setAttribute('width', bb.width);
+        pattern.setAttribute('height', bb.height);
 
         const image = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'image');
-        image.setAttributeNS(null, 'width', 1);
-        image.setAttributeNS(null, 'height', 1);
-        image.setAttributeNS(null, 'preserveAspectRatio', 'xMidYMid slice');
+        image.setAttributeNS(null, 'x', bb.x);
+        image.setAttributeNS(null, 'y', bb.y);
+        image.setAttributeNS(null, 'width', bb.width);
+        image.setAttributeNS(null, 'height', bb.height);
         image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', lector.result);
-        image.setAttributeNS(null, 'transform', 'scale(1)');
+        image.setAttributeNS(null, 'preserveAspectRatio', 'xMidYMid slice');
 
         pattern.appendChild(image);
         defs.appendChild(pattern);
 
-        // Aplicar patrón como fondo a la provincia
+        // Aplicar patrón como relleno de la provincia
         provinciaSeleccionada.setAttribute('fill', `url(#${patternId})`);
       };
 
       lector.readAsDataURL(archivo);
     }
+
 
   </script>
 </body>
