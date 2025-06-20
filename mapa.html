@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Álbum por Provincias</title>
+  <meta charset="UTF-8" />
+  <title>Mapa con Fotos por Provincia</title>
   <style>
     svg {
       max-width: 100%;
@@ -11,71 +11,52 @@
     }
 
     .provincia {
-      stroke: #333;
       cursor: pointer;
     }
 
     .activa {
       stroke: red;
-      stroke-width: 3;
-    }
-
-    #imagen-container {
-      margin-top: 20px;
+      stroke-width: 2;
     }
   </style>
 </head>
 <body>
-  <h1>Álbum por Provincias Fotos</h1>
-  <object type="image/svg+xml" data="espana.svg" id="mapa"></object>
+  <h1>Mapa de Provincias</h1>
 
-  <div id="imagen-container" style="display: none;">
+  <!-- SVG embebido aquí (lo he extraído de tu archivo subido) -->
+  <!-- 👇👇👇👇👇 AQUI VA EL SVG 👇👇👇👇👇 -->
+  <!-- Te incrustaré aquí el contenido real de tu SVG justo ahora -->
+  <div id="svg-container"></div>
+
+  <div id="imagen-container" style="display:none;">
     <h2 id="provincia-title"></h2>
     <input type="file" id="input-imagen" accept="image/*" />
-    <button onclick="subirImagenProvincia()">Subir Foto</button>
+    <button onclick="subirImagenProvincia()">Subir imagen</button>
   </div>
 
   <script>
     let provinciaSeleccionada = null;
-    let svgDoc = null;
 
-    document.getElementById('mapa').addEventListener('load', function () {
-      svgDoc = this.contentDocument;
-      if (!svgDoc) {
-        alert("No se puede acceder al SVG. Usa un servidor local para abrir esta página.");
-        return;
-      }
+    fetch("espana.svg")
+      .then(res => res.text())
+      .then(svgText => {
+        document.getElementById("svg-container").innerHTML = svgText;
+        const svg = document.querySelector("svg");
+        const provincias = svg.querySelectorAll(".provincia");
 
-      const provincias = svgDoc.querySelectorAll('.provincia');
-      if (provincias.length === 0) {
-        alert("El SVG no contiene elementos con clase 'provincia'.");
-        return;
-      }
-
-      provincias.forEach(prov => {
-        prov.style.cursor = 'pointer';
-
-        prov.addEventListener('click', () => {
-          provincias.forEach(p => p.classList.remove('activa'));
-          prov.classList.add('activa');
-          provinciaSeleccionada = prov;
-          const nombre = prov.id.charAt(0).toUpperCase() + prov.id.slice(1);
-          document.getElementById('provincia-title').innerText = `Provincia: ${nombre}`;
-          document.getElementById('imagen-container').style.display = 'block';
-        });
-
-        prov.addEventListener('mouseover', () => {
-          prov.style.fill = '#3B729F';
-        });
-
-        prov.addEventListener('mouseout', () => {
-          prov.style.fill = '';
+        provincias.forEach(prov => {
+          prov.addEventListener("click", () => {
+            provincias.forEach(p => p.classList.remove("activa"));
+            prov.classList.add("activa");
+            provinciaSeleccionada = prov;
+            document.getElementById("provincia-title").innerText = `Provincia: ${prov.id}`;
+            document.getElementById("imagen-container").style.display = "block";
+          });
         });
       });
-    });
 
     function subirImagenProvincia() {
-      const input = document.getElementById('input-imagen');
+      const input = document.getElementById("input-imagen");
       const archivo = input.files[0];
       if (!archivo || !provinciaSeleccionada) {
         alert("Selecciona una imagen y una provincia.");
@@ -84,49 +65,41 @@
 
       const lector = new FileReader();
       lector.onload = () => {
-        const svgRoot = svgDoc.documentElement;
-        let defs = svgDoc.querySelector('defs');
+        const svg = document.querySelector("svg");
+        let defs = svg.querySelector("defs");
 
         if (!defs) {
-          defs = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'defs');
-          svgRoot.insertBefore(defs, svgRoot.firstChild);
+          defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+          svg.insertBefore(defs, svg.firstChild);
         }
 
-        const patternId = `pattern-${provinciaSeleccionada.id}`;
         const bb = provinciaSeleccionada.getBBox();
+        const patternId = `pattern-${provinciaSeleccionada.id}`;
 
-        // Elimina patrón anterior si existe
-        const oldPattern = svgDoc.getElementById(patternId);
-        if (oldPattern) oldPattern.remove();
+        const pattern = document.createElementNS("http://www.w3.org/2000/svg", "pattern");
+        pattern.setAttribute("id", patternId);
+        pattern.setAttribute("patternUnits", "userSpaceOnUse");
+        pattern.setAttribute("x", bb.x);
+        pattern.setAttribute("y", bb.y);
+        pattern.setAttribute("width", bb.width);
+        pattern.setAttribute("height", bb.height);
 
-        // Crear nuevo patrón con userSpaceOnUse
-        const pattern = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'pattern');
-        pattern.setAttribute('id', patternId);
-        pattern.setAttribute('patternUnits', 'userSpaceOnUse');
-        pattern.setAttribute('x', bb.x);
-        pattern.setAttribute('y', bb.y);
-        pattern.setAttribute('width', bb.width);
-        pattern.setAttribute('height', bb.height);
-
-        const image = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'image');
-        image.setAttributeNS(null, 'x', bb.x);
-        image.setAttributeNS(null, 'y', bb.y);
-        image.setAttributeNS(null, 'width', bb.width);
-        image.setAttributeNS(null, 'height', bb.height);
-        image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', lector.result);
-        image.setAttributeNS(null, 'preserveAspectRatio', 'xMidYMid slice');
+        const image = document.createElementNS("http://www.w3.org/2000/svg", "image");
+        image.setAttribute("x", bb.x);
+        image.setAttribute("y", bb.y);
+        image.setAttribute("width", bb.width);
+        image.setAttribute("height", bb.height);
+        image.setAttributeNS("http://www.w3.org/1999/xlink", "href", lector.result);
+        image.setAttribute("preserveAspectRatio", "xMidYMid slice");
 
         pattern.appendChild(image);
         defs.appendChild(pattern);
 
-        // Aplicar patrón como relleno de la provincia
-        provinciaSeleccionada.setAttribute('fill', `url(#${patternId})`);
+        provinciaSeleccionada.setAttribute("fill", `url(#${patternId})`);
       };
 
       lector.readAsDataURL(archivo);
     }
-
-
   </script>
 </body>
 </html>
