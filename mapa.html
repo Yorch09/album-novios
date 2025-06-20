@@ -41,10 +41,20 @@
 
     document.getElementById('mapa').addEventListener('load', function () {
       svgDoc = this.contentDocument;
+      if (!svgDoc) {
+        alert("No se puede acceder al SVG. Usa un servidor local para abrir esta página.");
+        return;
+      }
+
       const provincias = svgDoc.querySelectorAll('.provincia');
+      if (provincias.length === 0) {
+        alert("El SVG no contiene elementos con clase 'provincia'.");
+        return;
+      }
 
       provincias.forEach(prov => {
         prov.style.cursor = 'pointer';
+
         prov.addEventListener('click', () => {
           provincias.forEach(p => p.classList.remove('activa'));
           prov.classList.add('activa');
@@ -54,10 +64,10 @@
           document.getElementById('imagen-container').style.display = 'block';
         });
 
-        // Cambio de color al pasar el ratón
         prov.addEventListener('mouseover', () => {
           prov.style.fill = '#3B729F';
         });
+
         prov.addEventListener('mouseout', () => {
           prov.style.fill = '';
         });
@@ -67,7 +77,10 @@
     function subirImagenProvincia() {
       const input = document.getElementById('input-imagen');
       const archivo = input.files[0];
-      if (!archivo || !provinciaSeleccionada) return alert("Selecciona una imagen y una provincia.");
+      if (!archivo || !provinciaSeleccionada) {
+        alert("Selecciona una imagen y una provincia.");
+        return;
+      }
 
       const lector = new FileReader();
       lector.onload = () => {
