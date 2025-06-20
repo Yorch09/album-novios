@@ -74,20 +74,24 @@
         const patternId = `pattern-${provinciaSeleccionada.id}`;
         let pattern = svgDoc.getElementById(patternId);
 
+        // Si ya existe, actualizamos la imagen
         if (pattern) {
           const image = pattern.querySelector('image');
           image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', lector.result);
         } else {
           pattern = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'pattern');
           pattern.setAttribute('id', patternId);
-          pattern.setAttribute('patternUnits', 'objectBoundingBox');
-          pattern.setAttribute('width', 1);
-          pattern.setAttribute('height', 1);
+          pattern.setAttribute('patternUnits', 'userSpaceOnUse');
+          pattern.setAttribute('x', bb.x);
+          pattern.setAttribute('y', bb.y);
+          pattern.setAttribute('width', bb.width);
+          pattern.setAttribute('height', bb.height);
 
           const image = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'image');
-          image.setAttribute('width', 1);
-          image.setAttribute('height', 1);
-          image.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+          image.setAttribute('x', bb.x);
+          image.setAttribute('y', bb.y);
+          image.setAttribute('width', bb.width);
+          image.setAttribute('height', bb.height);
           image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', lector.result);
 
           pattern.appendChild(image);
