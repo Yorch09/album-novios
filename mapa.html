@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Mapa con Fotos por Provincia</title>
+  <meta charset="UTF-8">
+  <title>Álbum por Provincias</title>
   <style>
     svg {
       max-width: 100%;
@@ -11,49 +11,58 @@
     }
 
     .provincia {
+      stroke: #333;
       cursor: pointer;
     }
 
     .activa {
       stroke: red;
-      stroke-width: 2;
+      stroke-width: 3;
+    }
+
+    #imagen-container {
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>Mapa de Provincias</h1>
+  <h1>Álbum por Provincias Fotos</h1>
+  <object type="image/svg+xml" data="espana.svg" id="mapa"></object>
 
-  <!-- SVG embebido aquí (lo he extraído de tu archivo subido) -->
-  <!-- 👇👇👇👇👇 AQUI VA EL SVG 👇👇👇👇👇 -->
-  <!-- Te incrustaré aquí el contenido real de tu SVG justo ahora -->
-  <div id="svg-container"></div>
-
-  <div id="imagen-container" style="display:none;">
+  <div id="imagen-container" style="display: none;">
     <h2 id="provincia-title"></h2>
     <input type="file" id="input-imagen" accept="image/*" />
-    <button onclick="subirImagenProvincia()">Subir imagen</button>
+    <button onclick="subirImagenProvincia()">Subir Foto</button>
   </div>
 
   <script>
     let provinciaSeleccionada = null;
+    let svgDoc = null;
 
-    fetch("espana.svg")
-      .then(res => res.text())
-      .then(svgText => {
-        document.getElementById("svg-container").innerHTML = svgText;
-        const svg = document.querySelector("svg");
-        const provincias = svg.querySelectorAll(".provincia");
+    document.getElementById('mapa').addEventListener('load', function () {
+      svgDoc = this.contentDocument;
+      const provincias = svgDoc.querySelectorAll('.provincia');
 
-        provincias.forEach(prov => {
-          prov.addEventListener("click", () => {
-            provincias.forEach(p => p.classList.remove("activa"));
-            prov.classList.add("activa");
-            provinciaSeleccionada = prov;
-            document.getElementById("provincia-title").innerText = `Provincia: ${prov.id}`;
-            document.getElementById("imagen-container").style.display = "block";
-          });
+      provincias.forEach(prov => {
+        prov.style.cursor = 'pointer';
+        prov.addEventListener('click', () => {
+          provincias.forEach(p => p.classList.remove('activa'));
+          prov.classList.add('activa');
+          provinciaSeleccionada = prov;
+          const nombre = prov.id.charAt(0).toUpperCase() + prov.id.slice(1);
+          document.getElementById('provincia-title').innerText = `Provincia: ${nombre}`;
+          document.getElementById('imagen-container').style.display = 'block';
+        });
+
+        // Cambio de color al pasar el ratón
+        prov.addEventListener('mouseover', () => {
+          prov.style.fill = '#3B729F';
+        });
+        prov.addEventListener('mouseout', () => {
+          prov.style.fill = '';
         });
       });
+    });
 
     function subirImagenProvincia() {
       const input = document.getElementById('input-imagen');
@@ -74,10 +83,8 @@
         const patternId = `pattern-${provinciaSeleccionada.id}`;
         let pattern = svgDoc.getElementById(patternId);
 
-        // Si ya existe, actualizamos la imagen
         if (pattern) {
-          const image = pattern.querySelector('image');
-          image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', lector.result);
+          pattern.querySelector('image').setAttributeNS('http://www.w3.org/1999/xlink', 'href', lector.result);
         } else {
           pattern = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'pattern');
           pattern.setAttribute('id', patternId);
@@ -103,7 +110,6 @@
 
       lector.readAsDataURL(archivo);
     }
-
   </script>
 </body>
 </html>
