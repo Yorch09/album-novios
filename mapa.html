@@ -97,7 +97,8 @@
         let pattern = svgDoc.getElementById(patternId);
 
         if (pattern) {
-          pattern.querySelector('image').setAttributeNS('http://www.w3.org/1999/xlink', 'href', lector.result);
+          const img = pattern.querySelector('image');
+          img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', lector.result);
         } else {
           pattern = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'pattern');
           pattern.setAttribute('id', patternId);
@@ -112,6 +113,7 @@
           image.setAttribute('y', bb.y);
           image.setAttribute('width', bb.width);
           image.setAttribute('height', bb.height);
+          image.setAttribute('preserveAspectRatio', 'xMidYMid slice'); // ⬅️ Esta línea escala bien la imagen
           image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', lector.result);
 
           pattern.appendChild(image);
@@ -123,6 +125,7 @@
 
       lector.readAsDataURL(archivo);
     }
+
   </script>
 </body>
 </html>
