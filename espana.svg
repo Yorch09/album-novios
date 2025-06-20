@@ -51,43 +51,43 @@
 </circle>
 </g>
 <g id="label_points">
-<circle class="Navarra, Comunidad Foral de" cx="712.4" cy="102.8" id="ESNC">
+<circle class="Navarra, Comunidad Foral de" cx="712.4" cy="102.8" id="Navarra">
 </circle>
-<circle class="País Vasco" cx="674.1" cy="79.7" id="ESPV">
+<circle class="País Vasco" cx="674.1" cy="79.7" id="Pais Vasco">
 </circle>
-<circle class="La Rioja" cx="678.5" cy="122.1" id="ESRI">
+<circle class="La Rioja" cx="678.5" cy="122.1" id="La Rioja">
 </circle>
-<circle class="Cataluña" cx="841.2" cy="149.6" id="ESCT">
+<circle class="Cataluña" cx="841.2" cy="149.6" id="Cataluña">
 </circle>
-<circle class="Aragon" cx="753.6" cy="165.5" id="ESAR">
+<circle class="Aragon" cx="753.6" cy="165.5" id="Aragon">
 </circle>
-<circle class="Extremadura" cx="531.5" cy="288.2" id="ESEX">
+<circle class="Extremadura" cx="531.5" cy="288.2" id="Extremadura">
 </circle>
-<circle class="Galicia" cx="464.1" cy="99.5" id="ESGA">
+<circle class="Galicia" cx="464.1" cy="99.5" id="Galicia">
 </circle>
-<circle class="Castilla y León" cx="578.4" cy="151" id="ESCL">
+<circle class="Castilla y León" cx="578.4" cy="151" id="Castilla y León">
 </circle>
-<circle class="Comunidad Valenciana" cx="750.1" cy="282.8" id="ESVC">
+<circle class="Comunidad Valenciana" cx="750.1" cy="282.8" id="Comunidad Valenciana">
 </circle>
-<circle class="Murcia" cx="718.9" cy="353.6" id="ESMC">
+<circle class="Murcia" cx="718.9" cy="353.6" id="Murcia">
 </circle>
-<circle class="Andalucía" cx="584.7" cy="373.3" id="ESAN">
+<circle class="Andalucía" cx="584.7" cy="373.3" id="Andalucía">
 </circle>
-<circle class="Asturias" cx="542.7" cy="67.1" id="ESAS">
+<circle class="Asturias" cx="542.7" cy="67.1" id="Asturias">
 </circle>
-<circle class="Cantabria" cx="613.5" cy="74.3" id="ESCB">
+<circle class="Cantabria" cx="613.5" cy="74.3" id="Cantabria">
 </circle>
-<circle class="Islas Canarias" cx="213.3" cy="815.8" id="ESCN">
+<circle class="Islas Canarias" cx="213.3" cy="815.8" id="Islas Canarias">
 </circle>
-<circle class="Islas Baleares" cx="899.3" cy="266.8" id="ESIB">
+<circle class="Islas Baleares" cx="899.3" cy="266.8" id="Islas Baleares">
 </circle>
-<circle class="Castilla la Mancha" cx="679.3" cy="277.2" id="ESCM">
+<circle class="Castilla la Mancha" cx="679.3" cy="277.2" id="Castilla la Mancha">
 </circle>
-<circle class="Comunidad de Madrid" cx="627.2" cy="219.2" id="ESMD">
+<circle class="Comunidad de Madrid" cx="627.2" cy="219.2" id="Comunidad de Madrid">
 </circle>
-<circle class="Ceuta" cx="563.3" cy="456.9" id="ESCE">
+<circle class="Ceuta" cx="563.3" cy="456.9" id="Ceuta">
 </circle>
-<circle class="Melilla" cx="660.4" cy="486.7" id="ESML">
+<circle class="Melilla" cx="660.4" cy="486.7" id="Melilla">
 </circle>
 </g>
 </svg>
