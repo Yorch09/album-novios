@@ -2,18 +2,36 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Álbum por Provincias</title>
   <style>
-    #contenedor {
-      display: flex;
-      flex-direction: row;
-      gap: 30px;
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    svg {
-      max-width: 600px;
+    h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      margin: 1rem 0;
+    }
+
+    #contenedor {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 0 10px 30px;
+    }
+
+    svg, object {
+      max-width: 100%;
       height: auto;
       border: 1px solid #ccc;
+      flex: 1 1 300px;
     }
 
     .provincia {
@@ -29,7 +47,8 @@
 
     #imagen-container {
       display: none;
-      max-width: 300px;
+      max-width: 400px;
+      flex: 1 1 250px;
     }
 
     #preview {
@@ -37,6 +56,28 @@
       height: auto;
       margin-top: 10px;
       border: 1px solid #ccc;
+    }
+
+    input[type="file"], button {
+      display: block;
+      margin-top: 10px;
+      width: 100%;
+      font-size: 1rem;
+      padding: 8px;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.4rem;
+      }
+
+      #imagen-container {
+        max-width: 100%;
+      }
+
+      input[type="file"], button {
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
@@ -57,7 +98,7 @@
   <script>
     let provinciaSeleccionada = null;
     let svgDoc = null;
-    const imagenesPorProvincia = {}; // clave: id de provincia, valor: dataURL
+    const imagenesPorProvincia = {};
 
     document.getElementById('mapa').addEventListener('load', function () {
       svgDoc = this.contentDocument;
@@ -73,7 +114,6 @@
           document.getElementById('provincia-title').innerText = `Provincia: ${nombre}`;
           document.getElementById('imagen-container').style.display = 'block';
 
-          // Mostrar imagen previa si existe
           const preview = document.getElementById('preview');
           if (imagenesPorProvincia[prov.id]) {
             preview.src = imagenesPorProvincia[prov.id];
@@ -84,13 +124,13 @@
           }
         });
 
-        // Efecto hover
         prov.addEventListener('mouseover', () => {
           prov.style.fill = '#3B729F';
         });
+
         prov.addEventListener('mouseout', () => {
           if (imagenesPorProvincia[prov.id]) {
-            prov.style.fill = 'navy'; // si ya tiene imagen
+            prov.style.fill = 'navy';
           } else {
             prov.style.fill = '';
           }
@@ -110,14 +150,10 @@
       const lector = new FileReader();
       lector.onload = () => {
         const dataURL = lector.result;
-
-        // Guardamos la imagen en memoria
         imagenesPorProvincia[provinciaSeleccionada.id] = dataURL;
 
-        // Cambiar el color de la provincia
         provinciaSeleccionada.style.fill = 'navy';
 
-        // Mostrar imagen en el contenedor
         const preview = document.getElementById('preview');
         preview.src = dataURL;
         preview.style.display = 'block';
