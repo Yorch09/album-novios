@@ -2,18 +2,67 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Álbum de Recuerdos</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Acceso al Álbum</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f8f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .login-box {
+      background: white;
+      padding: 30px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    input[type="password"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 200px;
+      margin-top: 10px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #error {
+      color: red;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Álbum de Recuerdos</h1>
-    <p>Elige cómo quieres explorar nuestros recuerdos:</p>
-
-    <div class="menu">
-      <a href="mapa.html" class="menu-btn">🗺️ Álbum por provincias</a>
-      <a href="misiones.html" class="menu-btn">🎯 Álbum por misiones</a>
-    </div>
+  <div class="login-box">
+    <h2>Introduce la contraseña</h2>
+    <input type="password" id="password" placeholder="Contraseña" />
+    <br />
+    <button onclick="verificar()">Entrar</button>
+    <div id="error">Contraseña incorrecta</div>
   </div>
+
+  <script>
+    const contraseñaCorrecta = "amorpordefecto"; // Cambia esto por la que tú quieras
+
+    function verificar() {
+      const input = document.getElementById("password").value;
+      if (input === contraseñaCorrecta) {
+        window.location.href = "index.html";
+      } else {
+        document.getElementById("error").style.display = "block";
+      }
+    }
+  </script>
 </body>
 </html>
