@@ -147,19 +147,34 @@
         return;
       }
 
-      const lector = new FileReader();
-      lector.onload = () => {
-        const dataURL = lector.result;
-        imagenesPorProvincia[provinciaSeleccionada.id] = dataURL;
+      const formData = new FormData();
+      formData.append('file', archivo);
+      formData.append('upload_preset', 'album_unsigned'); // tu upload preset
+      formData.append('folder', 'album_unsigned'); // opcional: organiza en carpeta
 
-        provinciaSeleccionada.style.fill = 'navy';
+      fetch('https://api.cloudinary.com/v1_1/jgonzaleztico/image/upload', {
+        method: 'POST',
+        body: formData
+      })
+        .then(res => res.json())
+        .then(data => {
+          const url = data.secure_url;
 
-        const preview = document.getElementById('preview');
-        preview.src = dataURL;
-        preview.style.display = 'block';
-      };
+          // Guardar en memoria (opcional: podrías persistir con localStorage o base de datos)
+          imagenesPorProvincia[provinciaSeleccionada.id] = url;
 
-      lector.readAsDataURL(archivo);
+          // Cambiar color de la provincia
+          provinciaSeleccionada.style.fill = 'navy';
+
+          // Mostrar imagen subida
+          const preview = document.getElementById('preview');
+          preview.src = url;
+          preview.style.display = 'block';
+        })
+        .catch(err => {
+          console.error('Error al subir la imagen:', err);
+          alert('Hubo un problema al subir la imagen.');
+        });
     }
   </script>
 </body>
