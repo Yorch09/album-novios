@@ -232,12 +232,22 @@
               if (doc.exists) {
                 mision.imagen = doc.data().url;
                 mision.estado = "completada";
+
+                // 🔓 Desbloquear la siguiente misión si estaba bloqueada
+                if (mi + 1 < seccion.misiones.length) {
+                  const siguiente = seccion.misiones[mi + 1];
+                  if (siguiente.estado === "bloqueada") {
+                    siguiente.estado = "desbloqueada";
+                  }
+                }
               }
+              // Solo renderizar si es la página actual
               if (pi === paginaActual) renderizarMisiones(seccion.misiones);
             });
         });
       });
     }
+
 
     function renderizarMisiones(misiones) {
       const grid = document.getElementById('grid-misiones');
