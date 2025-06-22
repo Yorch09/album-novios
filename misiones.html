@@ -224,7 +224,7 @@
 
     // Antes de mostrar, cargamos fotos desde Firestore
     function cargarTodas() {
-      ALBUM.forEach((seccion, pi) => {
+      album.forEach((seccion, pi) => {
         seccion.misiones.forEach((mision, mi) => {
           const docId = `${pi}-${mi}`;
           db.collection("misionesFotos").doc(docId).get()
@@ -281,14 +281,14 @@
     }
 
     function renderizarAlbum() {
-      const pag = ALBUM[paginaActual];
+      const pag = album[paginaActual];
       document.getElementById('pagina-tema').textContent = `Tema: ${pag.tema}`;
       renderizarMisiones(pag.misiones);
     }
 
     function cambiarPagina(d) {
       const nueva = paginaActual + d;
-      if (nueva >=0 && nueva < ALBUM.length) {
+      if (nueva >=0 && nueva < album.length) {
         paginaActual = nueva;
         renderizarAlbum();
       }
