@@ -192,27 +192,28 @@
     ];
 
     // 🚀 Evalúa los objetivos desde Firestore
-    async function evaluarObjetivos() {
-      for (const obj of objetivos) {
-        let completadas = 0;
-        for (const ref of obj.misiones) {
-          let id = '';
-          if (typeof ref === 'string') {
-            // Para misiones identificadas por código (como "ESMC")
-            id = ref;
-          } else {
-            // Para misiones tipo {pagina, indice}
-            id = `${ref.pagina}-${ref.indice}`;
-          }
-          const docSnap = await getDoc(doc(db, "misionesFotos", id));
-          if (docSnap.exists()) completadas++;
-        }
-        obj.progreso = completadas / obj.misiones.length;
-        obj.estado = (completadas === obj.misiones.length) ? "completada" : "pendiente";
-      }
-      renderizarObjetivos();
-    }
+    async function evaluarObjetivos(obj) {
+      let completadas = 0;
 
+      for (const ref of obj.misiones) {
+        let id, coleccion;
+
+        if (typeof ref === 'string') {
+          // Misión de tipo provincia, como "ESAN"
+          id = ref;
+          coleccion = "imagenesProvincias";
+        } else {
+          // Misión normal del álbum
+          id = `${ref.pagina}-${ref.indice}`;
+          coleccion = "misionesFotos";
+        }
+
+        const docSnap = await getDoc(doc(db, coleccion, id));
+        if (docSnap.exists()) completadas++;
+      }
+
+      return completadas >= obj.objetivo;
+    }
 
     function renderizarObjetivos() {
       const cont = document.getElementById('objetivos-container');
