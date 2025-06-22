@@ -196,7 +196,14 @@
       for (const obj of objetivos) {
         let completadas = 0;
         for (const ref of obj.misiones) {
-          const id = `${ref.pagina}-${ref.indice}`;
+          let id = '';
+          if (typeof ref === 'string') {
+            // Para misiones identificadas por código (como "ESMC")
+            id = ref;
+          } else {
+            // Para misiones tipo {pagina, indice}
+            id = `${ref.pagina}-${ref.indice}`;
+          }
           const docSnap = await getDoc(doc(db, "misionesFotos", id));
           if (docSnap.exists()) completadas++;
         }
@@ -205,6 +212,7 @@
       }
       renderizarObjetivos();
     }
+
 
     function renderizarObjetivos() {
       const cont = document.getElementById('objetivos-container');
