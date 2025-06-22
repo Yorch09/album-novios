@@ -1,11 +1,94 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Álbum por Provincias</title>
   <style>
-    /* ... Tu CSS sin cambios ... */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f2f5;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 20px;
+    }
+
+    #contenedor {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    @media (min-width: 768px) {
+      #contenedor {
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 40px;
+      }
+    }
+
+    #mapa {
+      width: 100%;
+      max-width: 600px;
+      height: auto;
+      border: 1px solid #ccc;
+    }
+
+    #imagen-container {
+      width: 100%;
+      max-width: 400px;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    #imagen-container h2 {
+      margin-top: 0;
+    }
+
+    #input-imagen {
+      width: 100%;
+      margin: 10px 0;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #3B729F;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2f5c81;
+    }
+
+    #preview {
+      margin-top: 15px;
+      width: 100%;
+      border-radius: 8px;
+      display: none;
+    }
+
+    /* Colores por defecto para provincias activas */
+    .activa {
+      stroke: #000;
+      stroke-width: 2;
+    }
   </style>
 
   <!-- Firebase App (base) -->
@@ -83,7 +166,6 @@
         });
       });
 
-      // 🔄 Cargar URLs desde Firestore
       db.collection("imagenesProvincias").get().then(snapshot => {
         snapshot.forEach(doc => {
           const provId = doc.id;
@@ -111,8 +193,8 @@
 
       const formData = new FormData();
       formData.append('file', archivo);
-      formData.append('upload_preset', 'album_unsigned'); // tu upload preset
-      formData.append('folder', 'album_unsigned'); // opcional
+      formData.append('upload_preset', 'album_unsigned');
+      formData.append('folder', 'album_unsigned');
 
       fetch('https://api.cloudinary.com/v1_1/dbb3mfypp/image/upload', {
         method: 'POST',
@@ -123,18 +205,14 @@
         const url = data.secure_url;
         const provId = provinciaSeleccionada.id;
 
-        // 🔄 Guardar en memoria
         imagenesPorProvincia[provId] = url;
 
-        // 🎯 Guardar en Firestore
         db.collection("imagenesProvincias").doc(provId).set({ url: url })
           .then(() => console.log(`Imagen guardada para ${provId}`))
           .catch(err => console.error("Error al guardar en Firestore:", err));
 
-        // 🎨 Cambiar color
         provinciaSeleccionada.style.fill = 'navy';
 
-        // 🖼️ Mostrar imagen
         const preview = document.getElementById('preview');
         preview.src = url;
         preview.style.display = 'block';
