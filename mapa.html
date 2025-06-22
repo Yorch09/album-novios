@@ -24,33 +24,36 @@
 
     #contenedor {
       display: flex;
+      flex-direction: row;
       flex-wrap: wrap;
       justify-content: center;
       align-items: flex-start;
       gap: 2rem;
       padding: 1rem;
-      max-width: 100%;
-      overflow-x: auto; /* <- por si se desborda */
+      width: 100%;
+      max-width: 1200px;
+      margin: auto;
     }
 
     #mapa {
       flex: 1 1 600px;
-      max-width: 100%;
-      height: auto;
+      width: 100%;
+      max-width: 600px;
       border: 1px solid #ccc;
       min-width: 300px;
+      height: auto;
     }
 
     #imagen-container {
       flex: 1 1 300px;
       max-width: 400px;
+      width: 100%;
       background: white;
       padding: 1rem;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       display: none;
     }
-
 
     #imagen-container h2 {
       margin-top: 0;
@@ -83,15 +86,21 @@
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
 
-    /* Responsive: stack on smaller screens */
+    /* RESPONSIVE */
     @media (max-width: 768px) {
       #contenedor {
         flex-direction: column;
         align-items: center;
+        padding: 1rem;
       }
 
       #mapa {
+        max-width: 100%;
         width: 100%;
+      }
+
+      #imagen-container {
+        max-width: 100%;
       }
     }
   </style>
