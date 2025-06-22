@@ -26,15 +26,19 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
+      align-items: flex-start;
       gap: 2rem;
       padding: 1rem;
+      max-width: 100%;
+      overflow-x: auto; /* <- por si se desborda */
     }
 
     #mapa {
-      width: 600px;
-      height: auto;
+      flex: 1 1 600px;
       max-width: 100%;
+      height: auto;
       border: 1px solid #ccc;
+      min-width: 300px;
     }
 
     #imagen-container {
@@ -46,6 +50,7 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       display: none;
     }
+
 
     #imagen-container h2 {
       margin-top: 0;
