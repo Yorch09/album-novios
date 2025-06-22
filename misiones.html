@@ -2,27 +2,17 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Álbum por Misiones 💌</title>
   <style>
     body {
       font-family: sans-serif;
       background: #fefaf5;
       padding: 20px;
+      margin: 0;
     }
-
-    h1 {
-      text-align: center;
-      font-size: 2em;
-      margin-bottom: 10px;
-    }
-
-    #pagina-tema {
-      text-align: center;
-      font-size: 1.2em;
-      margin-bottom: 10px;
-      font-weight: bold;
-    }
-
+    h1 { text-align: center; font-size: 2em; margin-bottom: 10px; }
+    #pagina-tema { text-align: center; font-size: 1.2em; margin-bottom: 10px; font-weight: bold; }
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -30,11 +20,7 @@
       max-width: 1000px;
       margin: auto;
     }
-
-    .card {
-      perspective: 1000px;
-    }
-
+    .card { perspective: 1000px; }
     .card-inner {
       position: relative;
       width: 100%;
@@ -42,119 +28,97 @@
       transform-style: preserve-3d;
       transition: transform 0.6s;
     }
-
-    .card.flipped .card-inner {
-      transform: rotateY(180deg);
-    }
-
+    .card.flipped .card-inner { transform: rotateY(180deg); }
     .card-front, .card-back {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
+      position: absolute; top:0; left:0; right:0; bottom:0;
       backface-visibility: hidden;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px;
-      box-sizing: border-box;
-      flex-direction: column;
-      text-align: center;
+      border-radius:10px;
+      box-shadow:0 4px 8px rgba(0,0,0,0.2);
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      padding:10px; box-sizing:border-box;
     }
-
     .card-front {
       background: url('imgs/Fondo_carta.jpg') center/contain no-repeat, #ffecf0;
-      font-weight: bold;
-      font-size: 0.9em;
+      font-weight:bold; font-size:0.9em;
+      cursor:pointer;
     }
-
+    .card.locked .card-front {
+      filter: grayscale(100%); cursor:not-allowed;
+    }
     .card-back {
-      background: white;
+      background:white;
       transform: rotateY(180deg);
     }
-
     .card-back img {
-      max-height: 100px;
-      width: auto;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-top: 10px;
+      max-height:100px;
+      width:auto;
+      object-fit:cover;
+      border-radius:8px;
+      margin-top:10px;
     }
-
-
-    .card.locked .card-front {
-      filter: grayscale(100%);
-      cursor: not-allowed;
-    }
-
-    .card:not(.locked) .card-front {
-      cursor: pointer;
-    }
-
-    input[type="file"] {
-      margin-top: 10px;
-    }
-
+    input[type=file] { margin-top:10px; }
     button {
-      margin-top: 10px;
-      padding: 5px 10px;
-      border: none;
-      background: #ff4081;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
+      margin-top:10px;
+      padding:5px 10px;
+      border:none;
+      background:#ff4081;
+      color:white;
+      border-radius:5px;
+      cursor:pointer;
     }
-
-    button:hover {
-      background: #d81b60;
-    }
-
-    .navegacion {
-      text-align: center;
-      margin-top: 20px;
-    }
-
+    button:hover { background:#d81b60; }
+    .navegacion { text-align:center; margin-top:20px; }
     .navegacion button {
-      margin: 0 10px;
-      padding: 8px 15px;
-      background: #007bff;
-      border: none;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
+      margin:0 10px;
+      padding:8px 15px;
+      background:#007bff;
+      border:none;
+      color:white;
+      border-radius:6px;
+      cursor:pointer;
     }
-
-    .navegacion button:hover {
-      background: #0056b3;
-    }
-
+    .navegacion button:hover { background:#0056b3; }
     .info-icon {
-      position: absolute;
-      top: 6px;
-      left: 6px;
-      font-size: 16px;
-      background: rgba(255, 255, 255, 0.8);
-      padding: 2px 6px;
-      border-radius: 50%;
-      cursor: default;
-      box-shadow: 0 0 2px rgba(0,0,0,0.3);
+      position:absolute;
+      top:6px; left:6px;
+      font-size:16px;
+      background:rgba(255,255,255,0.8);
+      padding:2px 6px;
+      border-radius:50%;
+      cursor:default;
+      box-shadow:0 0 2px rgba(0,0,0,0.3);
     }
   </style>
+
+  <!-- Firebase App & Firestore -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyChDtNNW0cQ4fKDXYSn25euAsroBHTqIMU",
+      authDomain: "album-novios.firebaseapp.com",
+      projectId: "album-novios",
+      storageBucket: "album-novios.firebasestorage.app",
+      messagingSenderId: "928410318746",
+      appId: "1:928410318746:web:53a729f111861bf711ac23"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
 </head>
 <body>
+  <h1>Álbum de Misiones 💌</h1>
+  <div id="pagina-tema"></div>
+  <div class="grid" id="grid-misiones"></div>
+  <div class="navegacion">
+    <button onclick="cambiarPagina(-1)">⬅️ Anterior</button>
+    <span id="pagina-actual"></span>
+    <button onclick="cambiarPagina(1)">Siguiente ➡️</button>
+  </div>
 
-<h1>Álbum de Misiones 💌</h1>
-<div id="pagina-tema"></div>
-<div class="grid" id="grid-misiones"></div>
-
-<div class="navegacion">
-  <button onclick="cambiarPagina(-1)">⬅️ Anterior</button>
-  <span id="pagina-actual"></span>
-  <button onclick="cambiarPagina(1)">Siguiente ➡️</button>
-</div>
-
-<script>
-  const album = [
+  <script>
+    const album = [
     {
       tema: "Citas y momentos juntos 💖",
       misiones: [
@@ -256,102 +220,101 @@
       ]
     }
   ];
+    let paginaActual = 0;
 
-  let paginaActual = 0;
-
-  function renderizarAlbum() {
-    const seccion = album[paginaActual];
-    document.getElementById('pagina-tema').textContent = `Tema: ${seccion.tema}`;
-    document.getElementById('pagina-actual').textContent = `Página ${paginaActual + 1} / ${album.length}`;
-    renderizarMisiones(seccion.misiones);
-  }
-
-  function cambiarPagina(delta) {
-    if (paginaActual + delta >= 0 && paginaActual + delta < album.length) {
-      paginaActual += delta;
-      renderizarAlbum();
-    }
-  }
-
-  function renderizarMisiones(misiones) {
-    const grid = document.getElementById('grid-misiones');
-    grid.innerHTML = '';
-
-    misiones.forEach((mision, index) => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      if (mision.estado === 'bloqueada') card.classList.add('locked');
-      if (mision.estado === 'completada') card.classList.add('flipped');
-
-      const inner = document.createElement('div');
-      inner.className = 'card-inner';
-
-      const front = document.createElement('div');
-      front.className = 'card-front';
-      front.innerHTML = `<div>${mision.nombre}</div>`;
-
-      // Info icon
-      const infoIcon = document.createElement('div');
-      infoIcon.className = 'info-icon';
-      infoIcon.title = mision.descripcion || "Sin descripción";
-      infoIcon.textContent = "ℹ️";
-      front.appendChild(infoIcon);
-
-      const back = document.createElement('div');
-      back.className = 'card-back';
-
-      const titulo = document.createElement('h4');
-      titulo.textContent = mision.nombre;
-      back.appendChild(titulo);
-
-      if (mision.estado === 'completada' && mision.imagen) {
-        const img = document.createElement('img');
-        img.src = mision.imagen;
-        back.appendChild(img);
-      } else if (mision.estado === 'desbloqueada') {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-
-        const btn = document.createElement('button');
-        btn.textContent = 'Subir foto';
-        btn.onclick = () => {
-          const file = input.files[0];
-          if (!file) return alert('Selecciona una imagen');
-
-          const reader = new FileReader();
-          reader.onload = () => {
-            mision.imagen = reader.result;
-            mision.estado = 'completada';
-
-            if (index + 1 < misiones.length && misiones[index + 1].estado === 'bloqueada') {
-              misiones[index + 1].estado = 'desbloqueada';
-            }
-            renderizarAlbum();
-          };
-          reader.readAsDataURL(file);
-        };
-
-        back.appendChild(input);
-        back.appendChild(btn);
-      }
-
-      inner.appendChild(front);
-      inner.appendChild(back);
-      card.appendChild(inner);
-      grid.appendChild(card);
-
-      if (mision.estado !== 'bloqueada') {
-        card.addEventListener('click', (e) => {
-          if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
-          card.classList.toggle('flipped');
+    // Antes de mostrar, cargamos fotos desde Firestore
+    function cargarTodas() {
+      ALBUM.forEach((seccion, pi) => {
+        seccion.misiones.forEach((mision, mi) => {
+          const docId = `${pi}-${mi}`;
+          db.collection("misionesFotos").doc(docId).get()
+            .then(doc => {
+              if (doc.exists) {
+                mision.imagen = doc.data().url;
+                mision.estado = "completada";
+              }
+              if (pi === paginaActual) renderizarMisiones(seccion.misiones);
+            });
         });
+      });
+    }
+
+    function renderizarMisiones(misiones) {
+      const grid = document.getElementById('grid-misiones');
+      grid.innerHTML = '';
+      misiones.forEach((m, i) => {
+        const card = document.createElement('div');
+        card.className = 'card ' + (m.estado === 'bloqueada' ? 'locked' : '') + (m.estado === 'completada' ? 'flipped' : '');
+        const inner = document.createElement('div'); inner.className='card-inner';
+
+        const front = document.createElement('div'); front.className='card-front';
+        front.innerHTML = `<div>${m.nombre}</div>`;
+        const info = document.createElement('div'); info.className='info-icon';
+        info.title = m.descripcion; info.textContent='ℹ️'; front.appendChild(info);
+
+        const back = document.createElement('div'); back.className = 'card-back';
+        const h4 = document.createElement('h4'); h4.textContent = m.nombre; back.appendChild(h4);
+
+        if (m.estado === 'completada' && m.imagen) {
+          const img = document.createElement('img'); img.src = m.imagen; back.appendChild(img);
+        } else if (m.estado === 'desbloqueada') {
+          const input = document.createElement('input');
+          input.type = 'file'; input.accept = 'image/*';
+          const btn = document.createElement('button');
+          btn.textContent = 'Subir foto';
+          btn.onclick = () => subirFoto(input.files[0], paginaActual, i);
+          back.appendChild(input);
+          back.appendChild(btn);
+        }
+
+        inner.appendChild(front);
+        inner.appendChild(back);
+        card.appendChild(inner);
+        grid.appendChild(card);
+        if (m.estado !== 'bloqueada')
+          card.addEventListener('click', e => {
+            if (['INPUT','BUTTON'].includes(e.target.tagName)) return;
+            card.classList.toggle('flipped');
+          });
+      });
+      document.getElementById('pagina-actual').textContent = `${paginaActual+1} / ${ALBUM.length}`;
+    }
+
+    function renderizarAlbum() {
+      const pag = ALBUM[paginaActual];
+      document.getElementById('pagina-tema').textContent = `Tema: ${pag.tema}`;
+      renderizarMisiones(pag.misiones);
+    }
+
+    function cambiarPagina(d) {
+      const nueva = paginaActual + d;
+      if (nueva >=0 && nueva < ALBUM.length) {
+        paginaActual = nueva;
+        renderizarAlbum();
       }
-    });
-  }
+    }
 
-  renderizarAlbum();
-</script>
+    function subirFoto(file, pi, mi) {
+      if (!file) return alert("Selecciona una imagen.");
+      const dd = ALBUM[pi].misiones[mi];
+      const form = new FormData();
+      form.append('file', file);
+      form.append('upload_preset', 'album_unsigned');
 
+      fetch('https://api.cloudinary.com/v1_1/dbb3mfypp/image/upload', {
+        method: 'POST', body: form
+      }).then(r=>r.json())
+        .then(data => {
+          dd.imagen = data.secure_url;
+          dd.estado = 'completada';
+          const docId = `${pi}-${mi}`;
+          db.collection("misionesFotos").doc(docId).set({url: data.secure_url});
+          renderizarAlbum();
+        }).catch(e=>{ console.error(e); alert("Error al subir"); });
+    }
+
+    cargarTodas();
+    renderizarAlbum();
+  </script>
 </body>
 </html>
