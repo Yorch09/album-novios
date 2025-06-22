@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Objetivos del álbum</title>
+  <style>
+    body { font-family: sans-serif; padding: 1em; background: #f9f9f9; }
+    .objetivo {
+      background: white;
+      border-radius: 12px;
+      padding: 1em;
+      margin: 1em 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border-left: 6px solid #ccc;
+    }
+    .completo { border-left-color: #4caf50; }
+    .objetivo h4 { margin: 0; }
+    .barra {
+      height: 10px;
+      background: #ddd;
+      border-radius: 5px;
+      margin: 5px 0;
+    }
+    .barra .progreso {
+      height: 10px;
+      background: #4caf50;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Objetivos desbloqueables</h2>
+  <div id="objetivos-container"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      // 🔐 Tu config de Firebase
+      apiKey: "TU_API_KEY",
+      authDomain: "TU_AUTH",
+      projectId: "TU_ID",
+      storageBucket: "TU_BUCKET",
+      messagingSenderId: "TU_SENDER",
+      appId: "TU_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // 🧠 Define tus objetivos
+    const objetivos = [
+      {
+        nombre: "Sur de España",
+        descripcion: "Completa todas las misiones de Andalucía y alrededores.",
+        misiones: [
+          { pagina: 3, indice: 0 },
+          { pagina: 3, indice: 1 },
+          { pagina: 3, indice: 2 },
+          { pagina: 3, indice: 3 },
+        ],
+        progreso: 0,
+        estado: "pendiente"
+      },
+      {
+        nombre: "Primera misión de cada página",
+        descripcion: "Haz la primera misión de todas las páginas.",
+        misiones: [
+          { pagina: 0, indice: 0 },
+          { pagina: 1, indice: 0 },
+          { pagina: 2, indice: 0 },
+          { pagina: 3, indice: 0 },
+          { pagina: 4, indice: 0 },
+        ],
+        progreso: 0,
+        estado: "pendiente"
+      }
+    ];
+
+    // 🚀 Evalúa los objetivos desde Firestore
+    async function evaluarObjetivos() {
+      for (const obj of objetivos) {
+        let completadas = 0;
+        for (const ref of obj.misiones) {
+          const id = `${ref.pagina}-${ref.indice}`;
+          const docSnap = await getDoc(doc(db, "misionesFotos", id));
+          if (docSnap.exists()) completadas++;
+        }
+        obj.progreso = completadas / obj.misiones.length;
+        obj.estado = (completadas === obj.misiones.length) ? "completada" : "pendiente";
+      }
+      renderizarObjetivos();
+    }
+
+    function renderizarObjetivos() {
+      const cont = document.getElementById('objetivos-container');
+      cont.innerHTML = '';
+      objetivos.forEach(o => {
+        const pct = Math.round(o.progreso * 100);
+        const div = document.createElement('div');
+        div.className = 'objetivo ' + (o.estado === 'completada' ? 'completo' : '');
+        div.innerHTML = `
+          <h4>${o.nombre}</h4>
+          <p>${o.descripcion}</p>
+          <div class="barra"><div class="progreso" style="width: ${pct}%"></div></div>
+          <p>Progreso: ${pct}%</p>
+          <p>Estado: ${o.estado}</p>
+        `;
+        cont.appendChild(div);
+      });
+    }
+
+    evaluarObjetivos();
+  </script>
+</body>
+</html>
