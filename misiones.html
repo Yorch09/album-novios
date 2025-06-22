@@ -303,14 +303,26 @@
 
       fetch('https://api.cloudinary.com/v1_1/dbb3mfypp/image/upload', {
         method: 'POST', body: form
-      }).then(r=>r.json())
+      }).then(r => r.json())
         .then(data => {
           dd.imagen = data.secure_url;
           dd.estado = 'completada';
+
+          // 🔓 Desbloquear la siguiente misión si existe
+          if (mi + 1 < album[pi].misiones.length) {
+            const siguiente = album[pi].misiones[mi + 1];
+            if (siguiente.estado === "bloqueada") {
+              siguiente.estado = "desbloqueada";
+            }
+          }
+
           const docId = `${pi}-${mi}`;
-          db.collection("misionesFotos").doc(docId).set({url: data.secure_url});
+          db.collection("misionesFotos").doc(docId).set({ url: data.secure_url });
           renderizarAlbum();
-        }).catch(e=>{ console.error(e); alert("Error al subir"); });
+        }).catch(e => {
+          console.error(e);
+          alert("Error al subir");
+        });
     }
 
     cargarTodas();
