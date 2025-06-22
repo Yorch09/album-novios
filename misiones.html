@@ -296,7 +296,7 @@
 
     function subirFoto(file, pi, mi) {
       if (!file) return alert("Selecciona una imagen.");
-      const dd = ALBUM[pi].misiones[mi];
+      const dd = album[pi].misiones[mi];
       const form = new FormData();
       form.append('file', file);
       form.append('upload_preset', 'album_unsigned');
