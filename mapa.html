@@ -1,112 +1,87 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Álbum por Provincias</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       font-family: sans-serif;
       margin: 0;
       padding: 0;
-      background: #f0f0f0;
+      box-sizing: border-box;
     }
 
     h1 {
       text-align: center;
-      margin: 1em 0;
-      color: #333;
+      font-size: 1.8rem;
+      margin: 1rem 0;
     }
 
     #contenedor {
       display: flex;
-      flex-direction: row;
       flex-wrap: wrap;
       justify-content: center;
       align-items: flex-start;
-      gap: 2rem;
-      padding: 1rem;
-      width: 100%;
-      max-width: 1200px;
-      margin: auto;
+      gap: 20px;
+      padding: 0 10px 30px;
     }
 
-    #mapa {
-      flex: 1 1 600px;
-      width: 100%;
-      max-width: 600px;
-      border: 1px solid #ccc;
-      min-width: 300px;
+    svg, object {
+      max-width: 100%;
       height: auto;
+      border: 1px solid #ccc;
+      flex: 1 1 300px;
+    }
+
+    .provincia {
+      stroke: #333;
+      cursor: pointer;
+      transition: fill 0.3s;
+    }
+
+    .provincia.activa {
+      stroke: navy;
+      stroke-width: 2;
     }
 
     #imagen-container {
-      flex: 1 1 300px;
-      max-width: 400px;
-      width: 100%;
-      background: white;
-      padding: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       display: none;
-    }
-
-    #imagen-container h2 {
-      margin-top: 0;
-      color: #444;
-    }
-
-    #input-imagen {
-      width: 100%;
-      margin-bottom: 1rem;
-    }
-
-    button {
-      padding: 0.5rem 1rem;
-      background: #3B729F;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #305a80;
+      max-width: 400px;
+      flex: 1 1 250px;
     }
 
     #preview {
-      display: block;
       max-width: 100%;
-      margin-top: 1rem;
-      border-radius: 5px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      height: auto;
+      margin-top: 10px;
+      border: 1px solid #ccc;
     }
 
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-      #contenedor {
-        flex-direction: column;
-        align-items: center;
-        padding: 1rem;
-      }
+    input[type="file"], button {
+      display: block;
+      margin-top: 10px;
+      width: 100%;
+      font-size: 1rem;
+      padding: 8px;
+    }
 
-      #mapa {
-        max-width: 100%;
-        width: 100%;
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.4rem;
       }
 
       #imagen-container {
         max-width: 100%;
       }
+
+      input[type="file"], button {
+        font-size: 0.9rem;
+      }
     }
   </style>
 
-
-  <!-- Firebase App -->
+  <!-- Firebase App (base) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <!-- Firestore -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
@@ -181,6 +156,7 @@
         });
       });
 
+      // 🔄 Cargar URLs desde Firestore
       db.collection("imagenesProvincias").get().then(snapshot => {
         snapshot.forEach(doc => {
           const provId = doc.id;
@@ -208,8 +184,8 @@
 
       const formData = new FormData();
       formData.append('file', archivo);
-      formData.append('upload_preset', 'album_unsigned');
-      formData.append('folder', 'album_unsigned');
+      formData.append('upload_preset', 'album_unsigned'); // tu upload preset
+      formData.append('folder', 'album_unsigned'); // opcional
 
       fetch('https://api.cloudinary.com/v1_1/dbb3mfypp/image/upload', {
         method: 'POST',
@@ -220,14 +196,18 @@
         const url = data.secure_url;
         const provId = provinciaSeleccionada.id;
 
+        // 🔄 Guardar en memoria
         imagenesPorProvincia[provId] = url;
 
+        // 🎯 Guardar en Firestore
         db.collection("imagenesProvincias").doc(provId).set({ url: url })
           .then(() => console.log(`Imagen guardada para ${provId}`))
           .catch(err => console.error("Error al guardar en Firestore:", err));
 
+        // 🎨 Cambiar color
         provinciaSeleccionada.style.fill = 'navy';
 
+        // 🖼️ Mostrar imagen
         const preview = document.getElementById('preview');
         preview.src = url;
         preview.style.display = 'block';
