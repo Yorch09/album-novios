@@ -2,109 +2,72 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Inicia sesión</title>
-  <link rel="icon" href="imgs/favicon.ico" type="image/x-icon">
+  <title>Inicia sesión con Google</title>
+  <link rel="icon" type="image/x-icon" href="imgs/favicon.ico">
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #fceabb, #f8b500);
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
       height: 100vh;
     }
-
-    .login-container {
-      background-color: white;
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    .login-box {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
       text-align: center;
-      width: 300px;
     }
-
-    h2 {
-      margin-bottom: 25px;
-      color: #333;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-
     button {
-      width: 100%;
-      padding: 12px;
-      background-color: #f8b500;
-      border: none;
-      border-radius: 8px;
-      color: white;
+      padding: 12px 20px;
       font-size: 16px;
       cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #e2a400;
-    }
-
-    #error {
-      color: red;
-      margin-top: 10px;
-      display: none;
+      background-color: #4285F4;
+      color: white;
+      border: none;
+      border-radius: 6px;
     }
   </style>
-
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyChDtNNW0cQ4fKDXYSn25euAsroBHTqIMU",
       authDomain: "album-novios.firebaseapp.com",
       projectId: "album-novios",
-      storageBucket: "album-novios.firebasestorage.app",
+      storageBucket: "album-novios.appspot.com",
       messagingSenderId: "928410318746",
       appId: "1:928410318746:web:53a729f111861bf711ac23"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
-    window.login = () => {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      signInWithEmailAndPassword(auth, email, password)
-        .then(userCredential => {
+    window.loginConGoogle = () => {
+      signInWithPopup(auth, provider)
+        .then(result => {
+          // Usuario autenticado correctamente
+          console.log("Autenticado como:", result.user.email);
           window.location.href = "album.html";
         })
         .catch(error => {
-          console.error(error.code, error.message);
-          document.getElementById("error").textContent = "Correo o contraseña incorrectos";
-          document.getElementById("error").style.display = "block";
+          console.error("Error al iniciar sesión:", error);
+          alert("Error al iniciar sesión con Google.");
         });
     };
   </script>
 </head>
 <body>
-  <div class="login-container">
-    <h2>Inicia sesión</h2>
-    <input type="email" id="email" placeholder="Correo electrónico" />
-    <input type="password" id="password" placeholder="Contraseña" />
-    <button onclick="login()">Entrar</button>
-    <p id="error"></p>
+  <div class="login-box">
+    <h2>Bienvenido al Álbum</h2>
+    <p>Inicia sesión con tu cuenta de Google</p>
+    <button onclick="loginConGoogle()">Entrar con Google</button>
   </div>
 </body>
 </html>
+
