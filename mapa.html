@@ -113,7 +113,7 @@
     </div>
   </div>
 
-  <script>
+    <script>
     let provinciaSeleccionada = null;
     let svgDoc = null;
     const imagenesPorProvincia = {};
@@ -155,7 +155,7 @@
         });
       });
 
-      // Espera a saber si hay usuario logueado
+      // ✅ Solo después de confirmar usuario, carga Firestore
       auth.onAuthStateChanged(user => {
         if (!user) {
           alert("Debes iniciar sesión.");
@@ -163,7 +163,7 @@
           return;
         }
 
-        // Ya autenticado: cargar imágenes desde Firestore
+        // 🔄 Cargar URLs desde Firestore
         db.collection("imagenesProvincias").get().then(snapshot => {
           snapshot.forEach(doc => {
             const provId = doc.id;
@@ -178,7 +178,7 @@
         }).catch(err => {
           console.error("Error al cargar imágenes:", err);
         });
-      });
+      }); // <-- Este paréntesis y llave CIERRAN correctamente onAuthStateChanged
     });
 
     function subirImagenProvincia() {
@@ -192,7 +192,7 @@
 
       const formData = new FormData();
       formData.append('file', archivo);
-      formData.append('upload_preset', 'album_unsigned'); // tu preset de Cloudinary
+      formData.append('upload_preset', 'album_unsigned');
       formData.append('folder', 'album_unsigned');
 
       fetch('https://api.cloudinary.com/v1_1/dbb3mfypp/image/upload', {
@@ -211,6 +211,7 @@
           .catch(err => console.error("Error al guardar en Firestore:", err));
 
         provinciaSeleccionada.style.fill = 'navy';
+
         const preview = document.getElementById('preview');
         preview.src = url;
         preview.style.display = 'block';
