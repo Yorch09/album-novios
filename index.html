@@ -4,6 +4,50 @@
   <meta charset="UTF-8">
   <title>Acceso al Álbum</title>
   <link rel="icon" type="image/x-icon" href="imgs/favicon.ico">
+  <script type="module">
+    // ✅ IMPORTA Firebase (Auth y App)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    // ✅ CONFIGURA tu proyecto (rellena con tus datos reales)
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyChDtNNW0cQ4fKDXYSn25euAsroBHTqIMU",
+      authDomain: "album-novios.firebaseapp.com",
+      projectId: "album-novios",
+      storageBucket: "album-novios.firebasestorage.app",
+      messagingSenderId: "928410318746",
+      appId: "1:928410318746:web:53a729f111861bf711ac23"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    // ✅ LOGIN con Google
+    document.addEventListener("DOMContentLoaded", () => {
+      const loginBtn = document.getElementById("loginBtn");
+
+      loginBtn.addEventListener("click", () => {
+        signInWithPopup(auth, provider)
+          .then(result => {
+            console.log("Autenticado:", result.user.displayName);
+            window.location.href = "album.html";
+          })
+          .catch(error => {
+            console.error("Error al autenticar:", error.message);
+            document.getElementById("error").textContent = "Error al iniciar sesión.";
+            document.getElementById("error").style.display = "block";
+          });
+      });
+
+      onAuthStateChanged(auth, user => {
+        if (user) {
+          window.location.href = "album.html"; // Redirige si ya está logueado
+        }
+      });
+    });
+  </script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -23,13 +67,6 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    input[type="password"] {
-      padding: 10px;
-      font-size: 16px;
-      width: 200px;
-      margin-top: 10px;
-    }
-
     button {
       margin-top: 15px;
       padding: 10px 20px;
@@ -46,24 +83,9 @@
 </head>
 <body>
   <div class="login-box">
-    <h2>Introduce la contraseña</h2>
-    <input type="password" id="password" placeholder="Contraseña" />
-    <br />
-    <button onclick="verificar()">Entrar</button>
-    <div id="error">Contraseña incorrecta</div>
+    <h2>Iniciar sesión con Google</h2>
+    <button id="loginBtn">Entrar con Google</button>
+    <div id="error"></div>
   </div>
-
-  <script>
-    const contraseñaCorrecta = "270321"; // Cambia esto por la que tú quieras
-
-    function verificar() {
-      const input = document.getElementById("password").value;
-      if (input === contraseñaCorrecta) {
-        window.location.href = "album.html";
-      } else {
-        document.getElementById("error").style.display = "block";
-      }
-    }
-  </script>
 </body>
 </html>
