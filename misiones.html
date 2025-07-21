@@ -95,6 +95,7 @@
   <!-- Firebase App & Firestore -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyChDtNNW0cQ4fKDXYSn25euAsroBHTqIMU",
@@ -106,6 +107,7 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+    const auth = firebase.auth();
   </script>
 </head>
 <body>
@@ -335,6 +337,14 @@
           alert("Error al subir");
         });
     }
+
+    // ✅ Solo después de confirmar usuario, carga Firestore
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        alert("Debes iniciar sesión.");
+        window.location.href = "index.html";
+        return;
+      }
 
     cargarTodas();
     renderizarAlbum();
