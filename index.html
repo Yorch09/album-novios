@@ -2,14 +2,74 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Login</title>
+  <title>Inicia sesión</title>
+  <link rel="icon" href="imgs/favicon.ico" type="image/x-icon">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #fceabb, #f8b500);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background-color: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 300px;
+    }
+
+    h2 {
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #f8b500;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #e2a400;
+    }
+
+    #error {
+      color: red;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+
   <script type="module">
-    // Firebase importaciones
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-      // ✅ CONFIGURA tu proyecto (rellena con tus datos reales)
-    // Your web app's Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyChDtNNW0cQ4fKDXYSn25euAsroBHTqIMU",
       authDomain: "album-novios.firebaseapp.com",
@@ -22,14 +82,12 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Función para iniciar sesión
     window.login = () => {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
       signInWithEmailAndPassword(auth, email, password)
         .then(userCredential => {
-          // Inicio de sesión exitoso
           window.location.href = "album.html";
         })
         .catch(error => {
@@ -41,11 +99,12 @@
   </script>
 </head>
 <body>
-  <h2>Inicia sesión</h2>
-  <input type="email" id="email" placeholder="Correo electrónico"><br>
-  <input type="password" id="password" placeholder="Contraseña"><br>
-  <button onclick="login()">Entrar</button>
-  <p id="error" style="color: red; display: none;"></p>
+  <div class="login-container">
+    <h2>Inicia sesión</h2>
+    <input type="email" id="email" placeholder="Correo electrónico" />
+    <input type="password" id="password" placeholder="Contraseña" />
+    <button onclick="login()">Entrar</button>
+    <p id="error"></p>
+  </div>
 </body>
 </html>
-
