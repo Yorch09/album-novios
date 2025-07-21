@@ -225,6 +225,14 @@
   ];
     let paginaActual = 0;
 
+    // ✅ Solo después de confirmar usuario, carga Firestore
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        alert("Debes iniciar sesión.");
+        window.location.href = "index.html";
+        return;
+      }
+
     // Antes de mostrar, cargamos fotos desde Firestore
     function cargarTodas() {
       album.forEach((seccion, pi) => {
@@ -337,14 +345,6 @@
           alert("Error al subir");
         });
     }
-
-    // ✅ Solo después de confirmar usuario, carga Firestore
-    auth.onAuthStateChanged(user => {
-      if (!user) {
-        alert("Debes iniciar sesión.");
-        window.location.href = "index.html";
-        return;
-      }
 
     cargarTodas();
     renderizarAlbum();
