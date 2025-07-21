@@ -12,13 +12,11 @@
       padding: 0;
       box-sizing: border-box;
     }
-
     h1 {
       text-align: center;
       font-size: 1.8rem;
       margin: 1rem 0;
     }
-
     #contenedor {
       display: flex;
       flex-wrap: wrap;
@@ -27,38 +25,32 @@
       gap: 20px;
       padding: 0 10px 30px;
     }
-
     svg, object {
       max-width: 100%;
       height: auto;
       border: 1px solid #ccc;
       flex: 1 1 300px;
     }
-
     .provincia {
       stroke: #333;
       cursor: pointer;
       transition: fill 0.3s;
     }
-
     .provincia.activa {
       stroke: navy;
       stroke-width: 2;
     }
-
     #imagen-container {
       display: none;
       max-width: 400px;
       flex: 1 1 250px;
     }
-
     #preview {
       max-width: 100%;
       height: auto;
       margin-top: 10px;
       border: 1px solid #ccc;
     }
-
     input[type="file"], button {
       display: block;
       margin-top: 10px;
@@ -66,25 +58,20 @@
       font-size: 1rem;
       padding: 8px;
     }
-
     @media (max-width: 600px) {
       h1 {
         font-size: 1.4rem;
       }
-
       #imagen-container {
         max-width: 100%;
       }
-
       input[type="file"], button {
         font-size: 0.9rem;
       }
-
       #contenedor {
         flex-direction: column;
         align-items: center;
       }
-
       svg, object {
         width: 100%;
         flex: none;
@@ -92,20 +79,17 @@
     }
   </style>
 
-  <!-- Firebase App (base) -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <!-- Firestore -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-  <!-- Firebase Auth -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-
 
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyChDtNNW0cQ4fKDXYSn25euAsroBHTqIMU",
       authDomain: "album-novios.firebaseapp.com",
       projectId: "album-novios",
-      storageBucket: "album-novios.firebasestorage.app",
+      storageBucket: "album-novios.appspot.com",
       messagingSenderId: "928410318746",
       appId: "1:928410318746:web:53a729f111861bf711ac23"
     };
@@ -170,27 +154,30 @@
           }
         });
       });
-      // ✅ Solo después de confirmar usuario, carga Firestore
+
+      // Espera a saber si hay usuario logueado
       auth.onAuthStateChanged(user => {
         if (!user) {
           alert("Debes iniciar sesión.");
           window.location.href = "index.html";
           return;
         }
-      // 🔄 Cargar URLs desde Firestore
-      db.collection("imagenesProvincias").get().then(snapshot => {
-        snapshot.forEach(doc => {
-          const provId = doc.id;
-          const url = doc.data().url;
-          imagenesPorProvincia[provId] = url;
 
-          const prov = svgDoc.getElementById(provId);
-          if (prov) {
-            prov.style.fill = 'navy';
-          }
+        // Ya autenticado: cargar imágenes desde Firestore
+        db.collection("imagenesProvincias").get().then(snapshot => {
+          snapshot.forEach(doc => {
+            const provId = doc.id;
+            const url = doc.data().url;
+            imagenesPorProvincia[provId] = url;
+
+            const prov = svgDoc.getElementById(provId);
+            if (prov) {
+              prov.style.fill = 'navy';
+            }
+          });
+        }).catch(err => {
+          console.error("Error al cargar imágenes:", err);
         });
-      }).catch(err => {
-        console.error("Error al cargar imágenes:", err);
       });
     });
 
@@ -205,8 +192,8 @@
 
       const formData = new FormData();
       formData.append('file', archivo);
-      formData.append('upload_preset', 'album_unsigned'); // tu upload preset
-      formData.append('folder', 'album_unsigned'); // opcional
+      formData.append('upload_preset', 'album_unsigned'); // tu preset de Cloudinary
+      formData.append('folder', 'album_unsigned');
 
       fetch('https://api.cloudinary.com/v1_1/dbb3mfypp/image/upload', {
         method: 'POST',
@@ -217,18 +204,13 @@
         const url = data.secure_url;
         const provId = provinciaSeleccionada.id;
 
-        // 🔄 Guardar en memoria
         imagenesPorProvincia[provId] = url;
 
-        // 🎯 Guardar en Firestore
         db.collection("imagenesProvincias").doc(provId).set({ url: url })
           .then(() => console.log(`Imagen guardada para ${provId}`))
           .catch(err => console.error("Error al guardar en Firestore:", err));
 
-        // 🎨 Cambiar color
         provinciaSeleccionada.style.fill = 'navy';
-
-        // 🖼️ Mostrar imagen
         const preview = document.getElementById('preview');
         preview.src = url;
         preview.style.display = 'block';
