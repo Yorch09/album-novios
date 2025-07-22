@@ -7,26 +7,13 @@
   <style>
     body { font-family: sans-serif; padding: 1em; background: #f9f9f9; }
     .objetivo {
-      background: white;
-      border-radius: 12px;
-      padding: 1em;
-      margin: 1em 0;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      border-left: 6px solid #ccc;
+      background: white; border-radius:12px; padding:1em; margin:1em 0;
+      box-shadow:0 2px 5px rgba(0,0,0,0.1); border-left:6px solid #ccc;
     }
-    .completo { border-left-color: #4caf50; }
-    .objetivo h4 { margin: 0; }
-    .barra {
-      height: 10px;
-      background: #ddd;
-      border-radius: 5px;
-      margin: 5px 0;
-    }
-    .barra .progreso {
-      height: 10px;
-      background: #4caf50;
-      border-radius: 5px;
-    }
+    .completo { border-left-color:#4caf50; }
+    .objetivo h4 { margin:0; }
+    .barra { height:10px; background:#ddd; border-radius:5px; margin:5px 0; }
+    .barra .progreso { height:10px; background:#4caf50; border-radius:5px; }
   </style>
 </head>
 <body>
@@ -38,12 +25,11 @@
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-
     const firebaseConfig = {
       apiKey: "AIzaSyChDtNNW0cQ4fKDXYSn25euAsroBHTqIMU",
       authDomain: "album-novios.firebaseapp.com",
       projectId: "album-novios",
-      storageBucket: "album-novios.firebasestorage.app",
+      storageBucket: "album-novios.appspot.com",
       messagingSenderId: "928410318746",
       appId: "1:928410318746:web:53a729f111861bf711ac23"
     };
@@ -52,26 +38,25 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
-    
-    // Esperar a que el usuario esté autenticado antes de leer Firestore
+
+    // 📌 Autenticación antes de acceder a objetivos
     onAuthStateChanged(auth, user => {
       if (user) {
-        evaluarTodosLosObjetivos();  // Ahora sí accedemos a Firestore
+        console.log("Autenticado como:", user.email);
+        evaluarTodosLosObjetivos();
       } else {
-        // Si no está autenticado, pedir login
         signInWithPopup(auth, provider)
           .then(result => {
-            console.log("Autenticado como:", result.user.email);
+            console.log("Autenticado por popup:", result.user.email);
             evaluarTodosLosObjetivos();
           })
           .catch(error => {
             console.error("Error en login:", error);
+            // Puedes manejar caída aquí si quieres
           });
       }
     });
 
-
-    // 🧠 Define tus objetivos
     const objetivos = [
       {
         nombre: "Sur de España",
@@ -360,19 +345,17 @@
       }
     ];
 
-    // 🚀 Evalúa los objetivos desde Firestore
     async function evaluarTodosLosObjetivos() {
       for (const objetivo of objetivos) {
         let completadas = 0;
-
-        for (const ref of objetivo.misiones) {
+        for (const refInfo of objetivo.misiones) {
           let id, coleccion;
 
-          if (typeof ref === 'string') {
-            id = ref;
+          if (typeof refInfo === 'string') {
+            id = refInfo;
             coleccion = "imagenesProvincias";
           } else {
-            id = `${ref.pagina}-${ref.indice}`;
+            id = `${refInfo.pagina}-${refInfo.indice}`;
             coleccion = "misionesFotos";
           }
 
@@ -384,7 +367,6 @@
         objetivo.progreso = completadas / total;
         objetivo.estado = completadas === total ? "completada" : "pendiente";
       }
-
       renderizarObjetivos();
     }
 
@@ -398,7 +380,7 @@
         div.innerHTML = `
           <h4>${o.nombre}</h4>
           <p>${o.descripcion}</p>
-          <div class="barra"><div class="progreso" style="width: ${pct}%"></div></div>
+          <div class="barra"><div class="progreso" style="width:${pct}%"></div></div>
           <p>Progreso: ${pct}%</p>
           <p>Estado: ${o.estado}</p>
         `;
@@ -406,7 +388,9 @@
       });
     }
 
+    // ✅ Llamada final de tu script — se ejecutará dentro de onAuthStateChanged()
     evaluarTodosLosObjetivos();
+
   </script>
 </body>
 </html>
