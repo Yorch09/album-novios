@@ -36,6 +36,8 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
 
     const firebaseConfig = {
       apiKey: "AIzaSyChDtNNW0cQ4fKDXYSn25euAsroBHTqIMU",
@@ -48,6 +50,26 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    
+    // Esperar a que el usuario esté autenticado antes de leer Firestore
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        evaluarTodosLosObjetivos();  // Ahora sí accedemos a Firestore
+      } else {
+        // Si no está autenticado, pedir login
+        signInWithPopup(auth, provider)
+          .then(result => {
+            console.log("Autenticado como:", result.user.email);
+            evaluarTodosLosObjetivos();
+          })
+          .catch(error => {
+            console.error("Error en login:", error);
+          });
+      }
+    });
+
 
     // 🧠 Define tus objetivos
     const objetivos = [
